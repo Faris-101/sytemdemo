@@ -190,8 +190,12 @@ export default function Layout() {
                           }`
                         }
                       >
-                        <Icon className="h-5 w-5 mb-0.5" strokeWidth={isActive ? 3 : 2} />
-                        <span className="text-[10px] font-black uppercase tracking-widest truncate">{item.label}</span>
+                        {({ isActive }) => (
+                          <>
+                            <Icon className="h-5 w-5 mb-0.5" strokeWidth={isActive ? 3 : 2} />
+                            <span className="text-[10px] font-black uppercase tracking-widest truncate">{item.label}</span>
+                          </>
+                        )}
                       </NavLink>
                     );
                   })}
