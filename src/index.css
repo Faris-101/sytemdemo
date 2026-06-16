@@ -203,6 +203,13 @@ h4,
   border: 1px solid var(--nav-border);
 }
 
+.glass-dark {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 /* ───────────────────────────────────────────
    Card Modernization
    ─────────────────────────────────────────── */
@@ -240,10 +247,78 @@ h4,
 }
 
 .surface-card:hover {
-  transform: translateY(-4px) scale(1.01);
+  transform: translateY(-4px) scale(1.005);
   box-shadow: var(--shadow-float);
   border-color: var(--accent-glow);
 }
+
+/* ───────────────────────────────────────────
+   Device Frame Simulation
+   ─────────────────────────────────────────── */
+.device-frame {
+  position: relative;
+  box-shadow: 
+    0 0 0 12px #1e293b, /* Bezel */
+    0 0 0 14px #334155, /* Outer Bezel */
+    0 25px 70px -10px rgba(0,0,0,0.5);
+  border-radius: 44px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.device-frame::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 25px;
+  background: #1e293b;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  z-index: 100;
+}
+
+/* ── FORCED BREAKPOINT SIMULATION ── */
+/* When .force-mobile or .force-tablet is active, we override Tailwind's LG/MD behaviors */
+
+.force-mobile .lg\:hidden,
+.force-tablet .lg\:hidden {
+  display: flex !important;
+}
+
+.force-mobile .lg\:flex,
+.force-tablet .lg\:flex {
+  display: none !important;
+}
+
+.force-mobile .lg\:grid,
+.force-tablet .lg\:grid {
+  display: block !important;
+}
+
+/* Force sidebars to collapse */
+.force-mobile .lg\:relative,
+.force-tablet .lg\:relative {
+  position: fixed !important;
+}
+
+.force-mobile .lg\:translate-x-0,
+.force-tablet .lg\:translate-x-0 {
+  transform: translateX(-100%) !important;
+}
+
+.force-mobile .lg\:ml-\[280px\],
+.force-tablet .lg\:ml-\[280px\] {
+  margin-left: 0 !important;
+}
+
+/* Force fonts and spacing to mobile scale */
+.force-mobile h1 { font-size: 1.875rem !important; line-height: 2.25rem !important; }
+.force-mobile .metric-card { padding: 16px !important; }
+.force-mobile .table-container { overflow-x: auto !important; }
+.force-mobile .grid-cols-1.sm\:grid-cols-2 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
 
 /* ───────────────────────────────────────────
    Metrics & Stats
