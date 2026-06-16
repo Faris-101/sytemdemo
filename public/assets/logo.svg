@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <!-- Latar Belakang Warna Krem Lembut (dari Landing Page) -->
+  <rect width="500" height="500" fill="#FDFBF7" />
+
+  <!-- Ikon Logo: Gabungan 'Gerbang Pertumbuhan' yang Detail & Bermakna -->
+  <!-- Menggunakan Warna Ungu-Biru Cerah dari Landing Page -->
+  <path d="M 250 120 L 200 170 L 200 290 H 220 V 190 L 250 160 L 280 190 V 290 H 300 V 170 Z
+          M 250 100 L 220 130 H 280 Z" fill="#6A5AEB"/>
+          
+  <!-- Tipografi menggunakan Font Serif yang Elegan dan Sans-serif Modern -->
+  <!-- Menggunakan Warna Abu-abu Tua dari Teks di Landing Page -->
+  
+  <!-- Nama Perusahaan (seperti 'PropSuite' di header) -->
+  <text x="250" y="360" font-family="'Playfair Display', Didot, serif" font-size="44" font-weight="bold" fill="#1C1C1C" text-anchor="middle" letter-spacing="10">AURELIA</text>
+  
+  <!-- Tagline (dengan font sans-serif bersih, seperti teks isi) -->
+  <text x="250" y="400" font-family="'Montserrat', Arial, sans-serif" font-size="14" fill="#555555" text-anchor="middle" letter-spacing="12">PROPERTY SOLUTIONS</text>
+
+</svg>
