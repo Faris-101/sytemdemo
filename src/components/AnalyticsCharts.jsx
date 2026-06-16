@@ -65,7 +65,7 @@ export function SalesChart({ data = [], mode = 'masuk' }) {
   const color = mode === 'masuk' ? 'var(--success)' : 'var(--accent)';
 
   return (
-    <div className="h-[268px] w-full">
+    <div className="h-[268px] min-h-[268px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 8, right: 4, left: 0, bottom: 0 }}>
           <defs>
@@ -121,7 +121,7 @@ export function LeadsChart({ leads = [] }) {
   }
 
   return (
-    <div className="h-[268px] w-full">
+    <div className="h-[268px] min-h-[268px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
