@@ -6,21 +6,9 @@ const api = axios.create({
 });
 
 // Otomatis sisipkan token di setiap request
-api.interceptors.request.use(async (config) => {
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
-
-  // UNTUK DEMO: Jika kita tidak punya backend nyata, kita bisa langsung return Mock di sini
-  // agar console log browser tetap bersih dari ERR_CONNECTION_REFUSED
-  if (!import.meta.env.VITE_API_URL || import.meta.env.VITE_API_URL.includes('localhost:3000')) {
-    const mock = getMockResponse(config);
-    if (mock) {
-      // Kita "batalkan" request asli dan lempar ke catch block interceptor response
-      // dengan tanda khusus bahwa ini adalah data mock
-      return Promise.reject({ isMock: true, config, data: mock });
-    }
-  }
-
   return config;
 });
 
@@ -35,19 +23,19 @@ function makeMockResponse(config, data) {
   };
 }
 
-// Interceptor response untuk menangani data mock dan error nyata
+// Interceptor untuk memaksa penggunaan Mock API jika backend tidak tersedia (ERR_CONNECTION_REFUSED)
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    // Jika request "dibatalkan" oleh interceptor request kita di atas
-    if (err.isMock) {
-      return Promise.resolve(makeMockResponse(err.config, err.data));
-    }
-
-    // Fallback jika request gagal (network error)
-    const mock = getMockResponse(err.config || {});
-    if (mock) {
-      return Promise.resolve(makeMockResponse(err.config || {}, mock));
+    // Tangani network error atau kegagalan koneksi ke localhost
+    const isNetworkError = !err.response && (err.code === 'ERR_NETWORK' || err.code === 'ECONNREFUSED' || !err.status);
+    
+    if (isNetworkError || err.response?.status === 404) {
+      const mock = getMockResponse(err.config || {});
+      if (mock) {
+        console.log(`[Mock API] Intercepting: ${err.config?.method?.toUpperCase()} ${err.config?.url}`);
+        return Promise.resolve(makeMockResponse(err.config || {}, mock));
+      }
     }
 
     if (err.response?.status === 401) {
