@@ -33,6 +33,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/useAuth";
 import { useTheme } from "../context/useTheme";
+import { useView } from "../context/ViewContext";
 
 const menus = [
   { group: "OVERVIEW" },
@@ -103,6 +104,7 @@ const ROLE_COLOR = {
 export default function Navbar({ onClose }) {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { viewMode } = useView();
   const navigate = useNavigate();
   const [badges, setBadges] = useState({ reminder: 0, approval: 0 });
 
@@ -148,50 +150,59 @@ export default function Navbar({ onClose }) {
     if (onClose) onClose();
   }
 
+  const isDesktopWorkspace = viewMode === 'desktop';
+
   return (
     <aside className="relative flex h-screen w-full max-w-[280px] shrink-0 flex-col overflow-hidden rounded-r-[40px] border-r border-[var(--border)] bg-[var(--surface)] text-[var(--text)] shadow-2xl transition-all duration-300">
       {/* ── AMBIENT GLOW ── */}
       <div className="glow-orb -left-32 -top-32 h-80 w-80 opacity-40 bg-[radial-gradient(circle,var(--accent-glow),transparent_70%)]" />
       <div className="glow-orb -right-32 bottom-20 h-64 w-64 opacity-20 bg-[radial-gradient(circle,var(--accent-2-soft),transparent_70%)]" />
 
-      {/* ── DESKTOP BRANDING ── */}
-      <div className="relative z-10 hidden lg:flex items-center justify-between px-8 py-10">
-        <div className="flex items-center gap-4 group cursor-pointer">
-          <div className="relative h-12 w-12 shrink-0 rounded-[18px] bg-white shadow-xl shadow-[var(--accent-glow)] overflow-hidden p-2 border border-[var(--border)] group-hover:scale-105 transition-transform duration-500">
-            <img src="/assets/logo.svg" alt="Logo" className="h-full w-full object-contain" />
-            <span className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-500 shadow-sm" />
+      {/* ── DESKTOP BRANDING (Only if Desktop Workspace) ── */}
+      {isDesktopWorkspace && (
+        <div className="relative z-10 hidden lg:flex items-center justify-between px-8 py-10">
+          <div className="flex items-center gap-4 group cursor-pointer">
+            <div className="relative h-12 w-12 shrink-0 rounded-[18px] bg-white shadow-xl shadow-[var(--accent-glow)] overflow-hidden p-2 border border-[var(--border)] group-hover:scale-105 transition-transform duration-500">
+              <img src="/assets/logo.svg" alt="Logo" className="h-full w-full object-contain" />
+              <span className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-500 shadow-sm" />
+            </div>
+            <div>
+              <h1 className="font-display text-2xl font-black tracking-tight leading-none text-[var(--text)]">
+                Prop<span className="text-[var(--accent)]">Suite</span>
+              </h1>
+              <p className="mt-1 text-[10px] font-black uppercase tracking-[0.25em] text-[var(--muted)] opacity-60">Control Center</p>
+            </div>
           </div>
-          <div>
-            <h1 className="font-display text-2xl font-black tracking-tight leading-none text-[var(--text)]">
+          <button
+            onClick={toggleTheme}
+            className="h-10 w-10 flex items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--muted)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-all"
+          >
+            {theme === "light" ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
+          </button>
+        </div>
+      )}
+
+      {/* ── MOBILE/DRAWER BRANDING (If Mobile/Tablet Workspace OR Screen Small) ── */}
+      {(!isDesktopWorkspace || window.innerWidth < 1024) && (
+        <div className="relative z-10 flex items-center justify-between px-6 py-6">
+          <div className="flex items-center gap-3.5">
+            <div className="h-10 w-10 rounded-2xl bg-white shadow-lg overflow-hidden p-1.5 border border-[var(--border)]">
+               <img src="/assets/logo.svg" alt="Logo" className="h-full w-full object-contain" />
+            </div>
+            <h1 className="font-display text-xl font-bold tracking-tight text-[var(--text)]">
               Prop<span className="text-[var(--accent)]">Suite</span>
             </h1>
-            <p className="mt-1 text-[10px] font-black uppercase tracking-[0.25em] text-[var(--muted)] opacity-60">Control Center</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={toggleTheme} className="h-11 w-11 flex items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--muted)]">
+              {theme === "light" ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
+            </button>
+            <button onClick={onClose} className="h-11 w-11 flex items-center justify-center rounded-2xl bg-rose-500/10 text-rose-500 transition-all">
+              <X className="h-5 w-5" strokeWidth={3} />
+            </button>
           </div>
         </div>
-        <button
-          onClick={toggleTheme}
-          className="h-10 w-10 flex items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--muted)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-all"
-        >
-          {theme === "light" ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
-        </button>
-      </div>
-
-      {/* ── MOBILE BRANDING ── */}
-      <div className="relative z-10 flex items-center justify-between px-6 py-6 lg:hidden">
-        <div className="flex items-center gap-3.5">
-          <div className="h-10 w-10 rounded-2xl bg-white shadow-lg overflow-hidden p-1.5 border border-[var(--border)]">
-             <img src="/assets/logo.svg" alt="Logo" className="h-full w-full object-contain" />
-          </div>
-          <h1 className="font-display text-xl font-bold tracking-tight text-[var(--text)]">
-            Prop<span className="text-[var(--accent)]">Suite</span>
-          </h1>
-        </div>
-        {onClose && (
-          <button onClick={onClose} className="h-11 w-11 flex items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--muted)] hover:text-rose-500 transition-all">
-            <X className="h-5 w-5" strokeWidth={3} />
-          </button>
-        )}
-      </div>
+      )}
 
       {/* ── USER PROFILE CARD ── */}
       <div className="relative z-10 mx-5 mb-8 overflow-hidden rounded-[32px] border border-[var(--border)] bg-gradient-to-br from-[var(--surface)] to-[var(--surface-soft)] p-5 shadow-[var(--shadow-card)]">

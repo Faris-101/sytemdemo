@@ -253,93 +253,34 @@ h4,
 }
 
 /* ───────────────────────────────────────────
-   Device Frame Simulation (High-Fidelity)
+   Workspace Mode Overrides
    ─────────────────────────────────────────── */
-.device-frame {
-  position: relative;
-  background: var(--bg);
-  border-radius: 48px;
-  border: 12px solid #1e1b4b; /* Deep Indigo bezel */
-  outline: 4px solid #312e81; /* Outer metallic ring */
-  box-shadow: 
-    0 50px 100px -20px rgba(0,0,0,0.5),
-    0 30px 60px -30px rgba(0,0,0,0.6),
-    inset 0 0 4px 2px rgba(255,255,255,0.1);
-  overflow: hidden !important;
+
+/* Global container transition */
+.workspace-root main > div {
+  transition: max-width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Simulated Notch */
-.device-frame::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 140px;
-  height: 28px;
-  background: #1e1b4b;
-  border-bottom-left-radius: 18px;
-  border-bottom-right-radius: 18px;
-  z-index: 1000;
-  box-shadow: inset 0 -1px 1px rgba(255,255,255,0.05);
-}
+/* Force specific behaviors based on Workspace State, not Media Queries */
 
-/* ── FORCED BREAKPOINT OVERRIDES ── */
-/* These rules ensure that when .force-mobile or .force-tablet is applied, 
-   the dashboard acts like it is on a small screen even if the browser is large. */
-
-.force-mobile .lg\:flex,
-.force-tablet .lg\:flex {
-  display: none !important;
-}
-
-.force-mobile .lg\:grid,
-.force-tablet .lg\:grid {
-  display: block !important;
-}
-
-.force-mobile .lg\:hidden,
-.force-tablet .lg\:hidden {
-  display: flex !important;
-}
-
-/* Force sidebars to be fixed/absolute in simulation */
-.force-mobile aside,
-.force-tablet aside {
-  position: fixed !important;
-  left: 0 !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  width: 280px !important;
-  z-index: 1000 !important;
-}
-
-/* Override margin-left typically used for fixed sidebars on PC */
-.force-mobile .lg\:ml-\[280px\],
-.force-tablet .lg\:ml-\[280px\] {
-  margin-left: 0 !important;
-}
-
-/* Grid adjustments for mobile simulation */
-.force-mobile .sm\:grid-cols-2,
-.force-mobile .lg\:grid-cols-3,
-.force-mobile .xl\:grid-cols-5 {
+/* MOBILE WORKSPACE FORCED RULES */
+.mode-mobile h1 { font-size: 1.875rem !important; }
+.mode-mobile h2 { font-size: 1.5rem !important; }
+.mode-mobile .grid-cols-1.sm\:grid-cols-2,
+.mode-mobile .lg\:grid-cols-3,
+.mode-mobile .xl\:grid-cols-5 {
   grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
 }
+.mode-mobile .table-container { overflow-x: auto !important; }
+.mode-mobile .metric-card { padding: 16px !important; }
 
-/* Typography scaling for mobile simulation */
-.force-mobile h1 { font-size: 24px !important; }
-.force-mobile h2 { font-size: 20px !important; }
-.force-mobile .metric-card p:last-child { font-size: 28px !important; }
-
-/* Table containment */
-.force-mobile .table-container {
-  overflow-x: auto !important;
+/* TABLET WORKSPACE FORCED RULES */
+.mode-tablet .lg\:grid-cols-3 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
-
-/* Tablet refinements */
-.force-tablet .lg\:grid-cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-.force-tablet .xl\:grid-cols-5 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+.mode-tablet .xl\:grid-cols-5 {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
 
 /* ───────────────────────────────────────────
    Metrics & Stats
