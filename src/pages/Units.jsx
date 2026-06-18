@@ -138,26 +138,26 @@ export default function Units() {
   return (
     <div className={`mx-auto ${isDesktop ? "space-y-6" : "space-y-4"}`}>
       {/* ── TOP HEADER ── */}
-      <div className={`flex flex-col gap-4 ${isDesktop ? "sm:flex-row sm:items-center sm:justify-between p-6" : "p-4"} bg-[#1c1730] rounded-xl border border-white/5`}>
-        <h1 className={`${isMobile ? "text-base" : "text-xl"} font-black text-white uppercase tracking-wider flex items-center gap-3`}>
-          <div className="h-8 w-1.5 bg-[var(--accent)] rounded-full" />
+      <div className={`flex flex-col gap-4 ${isDesktop ? "sm:flex-row sm:items-center sm:justify-between p-6" : "p-4"} bg-[#1c1730] rounded-2xl border border-white/10 shadow-2xl relative overflow-hidden`}>
+        <div className="absolute top-0 left-0 w-1 h-full bg-[var(--accent)] shadow-[0_0_15px_rgba(251,191,36,0.5)]" />
+        <h1 className={`${isMobile ? "text-base" : "text-xl"} font-black text-white uppercase tracking-wider flex items-center gap-3 pl-2`}>
           MASTER DATA UNIT
         </h1>
         <div className="flex items-center gap-3">
           <div className={`relative ${isMobile ? "flex-1" : ""}`}>
-             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20" />
              <input 
                type="text" 
                placeholder="Cari Unit..."
                value={searchQuery}
                onChange={(e) => setSearchQuery(e.target.value)}
-               className={`${isMobile ? "h-10 text-xs w-full" : "h-10 text-sm w-64"} pl-9 pr-4 bg-white/5 border border-white/10 rounded-lg text-white focus:border-[var(--accent)] outline-none transition-all`}
+               className={`${isMobile ? "h-10 text-xs w-full" : "h-10 text-sm w-64"} pl-9 pr-4 bg-white/5 border border-white/10 rounded-xl text-white focus:border-[var(--accent)] outline-none transition-all focus:ring-4 focus:ring-[var(--accent-glow)]`}
              />
           </div>
           {bisaEdit && (
-            <button onClick={bukaTambah} className={`${isMobile ? "h-10 w-10 p-0" : "h-10 px-4"} bg-[var(--accent)] text-black rounded-lg text-xs font-black uppercase tracking-wider hover:brightness-110 transition-all flex items-center justify-center gap-2`}>
+            <button onClick={bukaTambah} className={`${isMobile ? "h-10 w-10 p-0" : "h-10 px-4"} bg-[var(--accent)] text-black rounded-xl text-xs font-black uppercase tracking-wider hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-lg shadow-[var(--accent-glow)]`}>
               <Plus className="h-4 w-4" strokeWidth={3} />
-              {!isMobile && "Tambah"}
+              {!isMobile && "Tambah Unit"}
             </button>
           )}
         </div>
@@ -165,66 +165,71 @@ export default function Units() {
 
       {/* ── STATS CARDS ── */}
       <div className={`grid gap-4 ${
-        isMobile ? "grid-cols-2" : isTablet ? "grid-cols-2" : "lg:grid-cols-4"
+        isMobile ? "grid-cols-2" : isTablet ? "grid-cols-2" : isDesktop && !isTablet ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-4"
       }`}>
-        <StatCard label="Total" value={stats.total} icon={<Building2 />} color="bg-blue-500" isCompact={isDesktop || isMobile} />
+        <StatCard label="Total Unit" value={stats.total} icon={<Building2 />} color="bg-blue-500" isCompact={isDesktop || isMobile} />
         <StatCard label="Tersedia" value={stats.tersedia} icon={<CheckCircle2 />} color="bg-emerald-500" isCompact={isDesktop || isMobile} />
         <StatCard label="Terjual" value={stats.terjual} icon={<X />} color="bg-rose-500" isCompact={isDesktop || isMobile} />
         <StatCard label="Booking" value={stats.booking} icon={<Clock />} color="bg-amber-500" isCompact={isDesktop || isMobile} />
       </div>
 
       {/* ── TABLE ── */}
-      <div className="bg-[#1c1730] rounded-xl border border-white/5 overflow-hidden shadow-2xl">
-        <div className="overflow-x-auto">
-          <table className="table-modern w-full">
+      <div className="bg-[#1c1730] rounded-2xl border border-white/10 overflow-hidden shadow-2xl relative">
+        <div className="overflow-x-auto app-scrollbar">
+          <table className="table-modern w-full border-collapse">
             <thead>
-              <tr className={isDesktop ? "h-14" : "h-10"}>
-                <th className="w-12 text-center text-[10px] bg-[#2a2438] text-white">#</th>
-                <th className={`${isDesktop ? "px-6" : "px-4"} text-[10px] bg-[#2a2438] text-white text-left`}>Blok / Unit</th>
-                {!isMobile && <th className="px-6 text-[10px] bg-[#2a2438] text-white text-left">Tipe</th>}
-                <th className={`${isDesktop ? "px-6" : "px-4"} text-[10px] bg-[#2a2438] text-white text-left`}>Harga</th>
-                <th className={`${isDesktop ? "px-6" : "px-4"} text-[10px] bg-[#2a2438] text-white text-left`}>Status</th>
-                <th className="w-16 text-center text-[10px] bg-[#2a2438] text-white">Aksi</th>
+              <tr className={isDesktop ? "h-14" : "h-12"}>
+                <th className="w-12 text-center text-[10px] bg-[#2a2438] text-white/40 uppercase tracking-widest font-black">#</th>
+                <th className={`${isDesktop ? "px-6" : "px-4"} text-[10px] bg-[#2a2438] text-white/40 uppercase tracking-widest font-black text-left`}>Blok / Unit</th>
+                {!isMobile && <th className="px-6 text-[10px] bg-[#2a2438] text-white/40 uppercase tracking-widest font-black text-left">Tipe & Luas</th>}
+                <th className={`${isDesktop ? "px-6" : "px-4"} text-[10px] bg-[#2a2438] text-white/40 uppercase tracking-widest font-black text-left`}>Harga Jual</th>
+                <th className={`${isDesktop ? "px-6" : "px-4"} text-[10px] bg-[#2a2438] text-white/40 uppercase tracking-widest font-black text-left`}>Status</th>
+                <th className="w-20 text-center text-[10px] bg-[#2a2438] text-white/40 uppercase tracking-widest font-black">Aksi</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="py-20 text-center text-white/40 font-bold">Memuat...</td>
+                  <td colSpan={6} className="py-20 text-center">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="h-8 w-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
+                      <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">Memuat Data...</span>
+                    </div>
+                  </td>
                 </tr>
               ) : filteredUnits.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-20 text-center text-white/40 font-bold">Kosong</td>
+                  <td colSpan={6} className="py-20 text-center text-white/20 font-black uppercase tracking-widest">Data Kosong</td>
                 </tr>
               ) : (
                 filteredUnits.map((u, idx) => (
-                  <tr key={u.id} className="hover:bg-white/[0.02] transition-colors border-b border-white/5 last:border-0">
-                    <td className="text-center text-white/40 font-mono text-[10px]">{idx + 1}</td>
-                    <td className={isDesktop ? "px-6 py-4" : "px-4 py-2"}>
-                      <div className={`font-bold text-white uppercase ${isDesktop ? "text-sm" : "text-xs"}`}>{u.kode}</div>
-                      <div className="text-[9px] text-white/40 mt-0.5">Blok: {u.blok}</div>
+                  <tr key={u.id} className="hover:bg-white/[0.03] transition-colors border-b border-white/5 last:border-0 group">
+                    <td className="text-center text-white/30 font-mono text-[10px]">{idx + 1}</td>
+                    <td className={isDesktop ? "px-6 py-5" : "px-4 py-3"}>
+                      <div className={`font-black text-white uppercase group-hover:text-[var(--accent)] transition-colors ${isDesktop ? "text-sm" : "text-xs"}`}>{u.kode}</div>
+                      <div className="text-[9px] font-bold text-white/30 mt-0.5 uppercase tracking-wider">Blok: {u.blok}</div>
                     </td>
                     {!isMobile && (
-                      <td className="px-6 py-4">
-                        <div className="text-xs text-white/80">{u.tipe}</div>
-                        <div className="text-[9px] text-white/40 mt-0.5">{u.luas_tanah} / {u.luas_bangunan} m²</div>
+                      <td className="px-6 py-5">
+                        <div className="text-xs font-bold text-white/70">{u.tipe}</div>
+                        <div className="text-[9px] font-bold text-white/30 mt-0.5 uppercase tracking-wider">{u.luas_tanah}m² / {u.luas_bangunan}m²</div>
                       </td>
                     )}
-                    <td className={isDesktop ? "px-6 py-4" : "px-4 py-2"}>
-                      <div className={`font-bold text-[var(--accent)] ${isDesktop ? "text-sm" : "text-[11px]"}`}>
+                    <td className={isDesktop ? "px-6 py-5" : "px-4 py-3"}>
+                      <div className={`font-black text-[var(--accent)] ${isDesktop ? "text-base" : "text-sm"}`}>
                         {formatRupiah(u.harga)}
                       </div>
                     </td>
-                    <td className={isDesktop ? "px-6 py-4" : "px-4 py-2"}>
+                    <td className={isDesktop ? "px-6 py-5" : "px-4 py-3"}>
                        <StatusLabel status={u.status} isCompact={!isDesktop} />
                     </td>
-                    <td className="px-4 py-2">
-                      <div className="flex items-center justify-center gap-1">
-                        <button onClick={() => bukaEdit(u)} className="h-7 w-7 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-all grid place-items-center">
-                          <MoreVertical className="h-3.5 w-3.5" />
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <button onClick={() => bukaEdit(u)} className="h-8 w-8 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white transition-all grid place-items-center border border-blue-500/20">
+                          <MoreVertical className="h-4 w-4" />
                         </button>
-                        <button onClick={() => handleHapus(u)} className="h-7 w-7 rounded bg-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white transition-all grid place-items-center">
-                          <X className="h-3.5 w-3.5" />
+                        <button onClick={() => handleHapus(u)} className="h-8 w-8 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white transition-all grid place-items-center border border-rose-500/20">
+                          <X className="h-4 w-4" />
                         </button>
                       </div>
                     </td>

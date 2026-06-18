@@ -113,18 +113,18 @@ export default function Dashboard() {
       {/* ── HEADER ── */}
       <header className={`flex flex-col gap-6 ${isDesktop ? "xl:flex-row xl:items-end xl:justify-between" : ""}`}>
         <div className={isMobile ? "space-y-2" : "space-y-4"}>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--accent-2-soft)] text-[10px] font-black uppercase tracking-[0.25em] text-[var(--accent-2-deep)] border border-[var(--accent-2)]/10">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#fbbf24]/10 text-[10px] font-black uppercase tracking-[0.25em] text-[#fbbf24] border border-[#fbbf24]/20 shadow-[0_0_15px_rgba(251,191,36,0.1)]">
             <Sparkles className="h-3 w-3" />
             Operational Intelligence
           </div>
           <div className="space-y-2">
-            <h1 className={`font-display font-black tracking-tight text-[var(--text)] leading-tight ${
+            <h1 className={`font-display font-black tracking-tight text-white leading-tight ${
               isMobile ? "text-3xl" : "text-4xl sm:text-6xl"
             }`}>
               Selamat datang, <br />
-              <span className="text-[var(--accent)]">{user?.nama || "Administrator"}</span>
+              <span className="text-[var(--accent)] drop-shadow-[0_0_15px_rgba(251,191,36,0.3)]">{user?.nama || "Administrator"}</span>
             </h1>
-            <p className={`max-w-2xl font-medium text-[var(--muted)] leading-relaxed ${isMobile ? "text-sm" : "text-base"}`}>
+            <p className={`max-w-2xl font-medium text-white/50 leading-relaxed ${isMobile ? "text-sm" : "text-base"}`}>
               Pantau performa proyek, manajemen leads, dan aliran kas perusahaan dalam satu kendali terpadu.
             </p>
           </div>
@@ -134,20 +134,20 @@ export default function Dashboard() {
           <div className={`relative group ${isMobile ? "flex-1" : "min-w-[300px]"}`}>
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/20 group-focus-within:text-[var(--accent)] transition-colors" />
             <input
-              className={`${isMobile ? "h-12 text-xs" : "h-14 text-sm"} w-full rounded-2xl border-2 border-white/5 bg-white/5 px-4 pl-12 font-bold text-white outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent-soft)]`}
+              className={`${isMobile ? "h-12 text-xs" : "h-14 text-sm"} w-full rounded-2xl border border-white/10 bg-white/5 px-4 pl-12 font-bold text-white outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent-glow)]`}
               placeholder="Cari data..."
               type="search"
             />
           </div>
-          <div className={`${isMobile ? "h-12 text-[10px]" : "h-14 text-sm"} flex items-center gap-3 rounded-2xl border-2 border-white/5 bg-white/5 px-5 font-black uppercase tracking-widest text-[var(--accent)] shadow-sm`}>
+          <div className={`${isMobile ? "h-12 text-[10px]" : "h-14 text-sm"} flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-5 font-black uppercase tracking-widest text-[var(--accent)] shadow-lg`}>
             <Calendar className="h-5 w-5" />
             <span>{formatTanggalLengkap(new Date())}</span>
           </div>
-          <button className={`relative flex items-center justify-center rounded-2xl border-2 border-white/5 bg-white/5 text-white shadow-sm transition hover:border-[var(--accent)] hover:text-[var(--accent)] group ${
+          <button className={`relative flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white shadow-lg transition hover:border-[var(--accent)] hover:text-[var(--accent)] group ${
             isMobile ? "h-12 w-12" : "h-14 w-14"
           }`}>
             <Bell className="h-6 w-6 group-hover:animate-bounce" />
-            <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-rose-500 text-[10px] font-black text-white rounded-full border-2 border-[var(--bg)] shadow-lg">
+            <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-rose-500 text-[10px] font-black text-white rounded-full border-2 border-[#0a0914] shadow-lg">
               3
             </span>
           </button>
@@ -156,7 +156,7 @@ export default function Dashboard() {
 
       {/* ── METRICS ── */}
       <section className={`grid gap-4 ${
-        isMobile ? "grid-cols-1" : isTablet ? "grid-cols-2" : "grid-cols-3 xl:grid-cols-5"
+        isMobile ? "grid-cols-1" : isTablet ? "grid-cols-2" : isDesktop && !isTablet ? "grid-cols-2 sm:grid-cols-3 xl:grid-cols-5" : "grid-cols-3 xl:grid-cols-5"
       }`}>
         <MetricCard icon={<Home />} label="Total Unit" value={stats.totalUnit} helper={`${stats.unitThisMonth} unit baru`} tone="emerald" isCompact={isDesktop} />
         <MetricCard icon={<Key />} label="Tersedia" value={stats.unitTersedia} helper={`${formatPercent(stats.availableRate)}`} tone="blue" isCompact={isDesktop} />
@@ -167,7 +167,7 @@ export default function Dashboard() {
 
       {/* ── MAIN CONTENT GRID ── */}
       <div className={`grid gap-6 ${
-        isMobile ? "grid-cols-1" : isTablet ? "grid-cols-1" : "2xl:grid-cols-[1fr_360px]"
+        isDesktop ? "2xl:grid-cols-[1fr_360px]" : "grid-cols-1"
       }`}>
         <div className={isDesktop ? "space-y-8" : "space-y-6"}>
           {/* Charts Row */}
@@ -176,17 +176,17 @@ export default function Dashboard() {
           }`}>
             <Panel title="Analytics Hub" subtitle="Growth Trends" isCompact={isDesktop}>
               <div className={isMobile ? "h-[250px]" : "h-[340px]"}>
-                <ChartPanel chartData={data.chart} leads={data.leads} canReadFinance={canReadFinance} />
+                <ChartPanel chartData={data.chart} leads={data.leads} canReadFinance={canReadFinance} isCompact={isDesktop} />
               </div>
             </Panel>
             <Panel title="Inventory" subtitle="Distribution" isCompact={isDesktop}>
-               <UnitPieChart distribution={stats.unitDistribution} total={stats.totalUnit} />
+               <UnitPieChart distribution={stats.unitDistribution} total={stats.totalUnit} isCompact={isDesktop} />
             </Panel>
           </div>
 
           {/* Summaries Row */}
           <div className={`grid gap-4 ${
-            isMobile ? "grid-cols-2" : isTablet ? "grid-cols-2" : "lg:grid-cols-4"
+            isMobile ? "grid-cols-2" : isTablet ? "grid-cols-2" : "grid-cols-2 lg:grid-cols-4"
           }`}>
             <SummaryCard label="Revenue" value={formatRupiahCompact(stats.totalSales)} change="+18%" tone="blue" trend="up" isCompact={isDesktop} />
             <SummaryCard label="Profit" value={formatRupiahCompact(stats.grossProfit)} change="+12%" tone="emerald" trend="up" isCompact={isDesktop} />

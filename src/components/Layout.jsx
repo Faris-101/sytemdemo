@@ -104,25 +104,25 @@ export default function Layout() {
         <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden h-full">
           
           {/* TOP HEADER (Layout changes based on mode) */}
-          <header className={`glass sticky top-0 z-50 flex items-center justify-between px-6 py-4 shadow-sm transition-all`}>
+          <header className={`sticky top-0 z-50 flex items-center justify-between px-6 py-4 transition-all bg-[#0a0914]/80 backdrop-blur-xl border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.3)]`}>
             
             {/* Left Section: Hamburger (Tablet/Mobile) or Search (Desktop) */}
             <div className="flex items-center gap-4 flex-1">
               {!isDesktop && (
                 <button 
                   onClick={() => setSidebarOpen(true)}
-                  className="p-2 rounded-xl bg-white/5 text-[var(--accent)] hover:bg-white/10 transition-all"
+                  className="p-2.5 rounded-xl bg-white/5 text-[var(--accent)] hover:bg-white/10 transition-all border border-white/5 active:scale-95"
                 >
-                  <Menu className="h-6 w-6" strokeWidth={2.5} />
+                  <Menu className="h-5 w-5" strokeWidth={2.5} />
                 </button>
               )}
               
               {!isDesktop && (
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-lg bg-white p-1 overflow-hidden">
+                <div className="flex items-center gap-2.5">
+                  <div className="h-9 w-9 rounded-xl bg-white p-1.5 shadow-lg shadow-[var(--accent-glow)] overflow-hidden">
                     <img src="/assets/logo.svg" alt="Logo" className="h-full w-full object-contain" />
                   </div>
-                  <span className="font-display text-lg font-black tracking-tight text-white">
+                  <span className="font-display text-xl font-black tracking-tight text-white">
                     Prop<span className="text-[var(--accent)]">Suite</span>
                   </span>
                 </div>
@@ -130,11 +130,11 @@ export default function Layout() {
 
               {isDesktop && (
                 <div className="relative w-full max-w-md group">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 group-focus-within:text-[var(--accent)] transition-colors" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20 group-focus-within:text-[var(--accent)] transition-colors" />
                   <input 
                     type="text" 
-                    placeholder="Search anything..." 
-                    className="w-full h-11 pl-11 pr-4 bg-white/5 border border-white/10 rounded-2xl text-sm text-white outline-none focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent-glow)] transition-all"
+                    placeholder="Search operations..." 
+                    className="w-full h-11 pl-11 pr-4 bg-white/5 border border-white/10 rounded-2xl text-sm text-white outline-none focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent-glow)] transition-all placeholder:text-white/20"
                   />
                 </div>
               )}
@@ -143,20 +143,20 @@ export default function Layout() {
             {/* Right Section: Notifications + Profile */}
             <div className="flex items-center gap-4">
               {isDesktop && (
-                <button className="relative p-2.5 rounded-xl bg-white/5 text-white/60 hover:text-white hover:bg-white/10 transition-all">
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute top-2 right-2 h-2 w-2 bg-rose-500 rounded-full border-2 border-[#1c1730]" />
+                <button className="relative p-2.5 rounded-xl bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all border border-white/5 group">
+                  <Bell className="h-5 w-5 group-hover:rotate-12 transition-transform" />
+                  <span className="absolute top-2.5 right-2.5 h-2 w-2 bg-rose-500 rounded-full border-2 border-[#0a0914] shadow-sm" />
                 </button>
               )}
 
               <div className="flex items-center gap-3 pl-4 border-l border-white/10">
                 {!isMobile && (
                   <div className="text-right hidden sm:block">
-                    <p className="text-xs font-black text-white leading-none">{user?.nama || "Admin"}</p>
-                    <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest mt-1">{user?.role || "Manager"}</p>
+                    <p className="text-[11px] font-black text-white leading-none tracking-tight">{user?.nama || "Administrator"}</p>
+                    <p className="text-[9px] font-bold text-[#fbbf24] uppercase tracking-[0.15em] mt-1 opacity-80">{user?.role || "Manager"}</p>
                   </div>
                 )}
-                <div className={`${isMobile ? "h-9 w-9" : "h-10 w-10"} rounded-xl bg-[var(--accent)] flex items-center justify-center text-xs font-black text-black shadow-lg border-2 border-white/10`}>
+                <div className={`${isMobile ? "h-9 w-9" : "h-11 w-11"} rounded-xl bg-gradient-to-br from-[#fbbf24] to-[#d97706] flex items-center justify-center text-xs font-black text-black shadow-lg shadow-[rgba(251,191,36,0.2)] border-2 border-white/20 active:scale-95 transition-transform`}>
                   {initials}
                 </div>
               </div>
@@ -170,12 +170,14 @@ export default function Layout() {
               ${isDesktop ? "px-10 py-8" : isTablet ? "px-6 py-6" : "px-4 py-4"}
             `}
           >
-            <Outlet />
+            <div className="max-w-[1600px] mx-auto">
+               <Outlet />
+            </div>
           </main>
 
           {/* BOTTOM NAVIGATION (Visible only in Mobile mode) */}
           {isMobile && (
-            <footer className="sticky bottom-0 z-[60] border-t border-white/5 bg-[#1c1730]/95 px-4 py-3 backdrop-blur-xl transition-all">
+            <footer className="sticky bottom-0 z-[60] border-t border-white/10 bg-[#1c1730]/90 px-4 py-3 backdrop-blur-2xl shadow-[0_-10px_40px_rgba(0,0,0,0.4)]">
               <div className="mx-auto flex max-w-[500px] items-center justify-between gap-1">
                 {mobileLinks.map((item) => (
                   <NavLink
@@ -183,14 +185,14 @@ export default function Layout() {
                     to={item.to}
                     end={item.to === "/dashboard"}
                     className={({ isActive }) =>
-                      `group flex min-w-[0] flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 transition-all ${
+                      `group flex min-w-[0] flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2.5 transition-all ${
                         isActive 
-                          ? "bg-[var(--accent)] text-black shadow-lg scale-105" 
-                          : "text-white/40 hover:bg-white/5 hover:text-[var(--accent)]"
+                          ? "bg-[var(--accent)] text-black shadow-xl shadow-[var(--accent-glow)] scale-105 font-bold" 
+                          : "text-white/40 hover:bg-white/5 hover:text-white"
                       }`
                     }
                   >
-                    <item.icon className="h-4.5 w-4.5 mb-0.5" strokeWidth={2.5} />
+                    <item.icon className="h-5 w-5 mb-0.5" strokeWidth={isActive ? 3 : 2} />
                     <span className="text-[8px] font-black uppercase tracking-[0.1em] truncate">{item.label}</span>
                   </NavLink>
                 ))}
