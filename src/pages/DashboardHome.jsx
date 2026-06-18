@@ -117,15 +117,15 @@ export default function Dashboard() {
             <Sparkles className="h-3 w-3" />
             Operational Intelligence
           </div>
-          <div className="space-y-2">
-            <h1 className={`font-display font-black tracking-tight text-white leading-tight ${
-              isMobile ? "text-3xl" : "text-4xl sm:text-6xl"
+          <div className="space-y-1">
+            <h1 className={`font-heading font-black tracking-tighter text-white leading-[1.1] ${
+              isMobile ? "text-3xl" : "text-5xl sm:text-7xl"
             }`}>
-              Selamat datang, <br />
-              <span className="text-[var(--accent)] drop-shadow-[0_0_15px_rgba(251,191,36,0.3)]">{user?.nama || "Administrator"}</span>
+              Welcome back, <br />
+              <span className="text-[var(--accent)] drop-shadow-[0_0_20px_rgba(251,191,36,0.3)]">{user?.nama || "Admin"}</span>
             </h1>
-            <p className={`max-w-2xl font-medium text-white/50 leading-relaxed ${isMobile ? "text-sm" : "text-base"}`}>
-              Pantau performa proyek, manajemen leads, dan aliran kas perusahaan dalam satu kendali terpadu.
+            <p className={`max-w-xl font-medium text-white/40 leading-relaxed ${isMobile ? "text-sm" : "text-base"}`}>
+              Your property portfolio is performing <span className="text-emerald-500 font-bold">12% better</span> than last month.
             </p>
           </div>
         </div>
