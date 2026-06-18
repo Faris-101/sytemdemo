@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, cloneElement } from "react";
 import { 
   Search, 
   Calendar, 
@@ -9,10 +9,7 @@ import {
   UserPlus, 
   Users, 
   TrendingUp, 
-  BarChart3, 
-  PieChart, 
   ArrowUpRight,
-  MoreVertical,
   Activity,
   ChevronRight,
   Sparkles,
@@ -21,6 +18,7 @@ import {
 } from "lucide-react";
 import api from "../api/axios";
 import { useAuth } from "../context/useAuth";
+import { useView } from "../context/ViewContext";
 import { ChartPanel, UnitPieChart } from "../components/AnalyticsCharts";
 
 const initialData = {
@@ -40,9 +38,14 @@ const initialData = {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { viewMode } = useView();
   const canReadFinance = ["admin", "keuangan", "direktur"].includes(user?.role);
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(true);
+
+  const isMobile = viewMode === "mobile";
+  const isTablet = viewMode === "tablet";
+  const isDesktop = viewMode === "desktop";
 
   useEffect(() => {
     let ignore = false;
@@ -104,39 +107,45 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="mx-auto max-w-[1600px] space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className={`mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ${
+      isMobile ? "space-y-6" : isTablet ? "space-y-8" : "space-y-10"
+    }`}>
       {/* ── HEADER ── */}
-      <header className="flex flex-col gap-8 xl:flex-row xl:items-end xl:justify-between">
-        <div className="space-y-4">
+      <header className={`flex flex-col gap-6 ${isDesktop ? "xl:flex-row xl:items-end xl:justify-between" : ""}`}>
+        <div className={isMobile ? "space-y-2" : "space-y-4"}>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--accent-2-soft)] text-[10px] font-black uppercase tracking-[0.25em] text-[var(--accent-2-deep)] border border-[var(--accent-2)]/10">
             <Sparkles className="h-3 w-3" />
             Operational Intelligence
           </div>
           <div className="space-y-2">
-            <h1 className="font-display text-4xl font-black tracking-tight text-[var(--text)] sm:text-6xl leading-tight">
+            <h1 className={`font-display font-black tracking-tight text-[var(--text)] leading-tight ${
+              isMobile ? "text-3xl" : "text-4xl sm:text-6xl"
+            }`}>
               Selamat datang, <br />
               <span className="text-[var(--accent)]">{user?.nama || "Administrator"}</span>
             </h1>
-            <p className="max-w-2xl text-base font-medium text-[var(--muted)] leading-relaxed">
+            <p className={`max-w-2xl font-medium text-[var(--muted)] leading-relaxed ${isMobile ? "text-sm" : "text-base"}`}>
               Pantau performa proyek, manajemen leads, dan aliran kas perusahaan dalam satu kendali terpadu.
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="relative group min-w-[300px]">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--muted)] group-focus-within:text-[var(--accent)] transition-colors" />
+        <div className={`flex flex-wrap items-center gap-4 ${isMobile ? "w-full" : ""}`}>
+          <div className={`relative group ${isMobile ? "flex-1" : "min-w-[300px]"}`}>
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/20 group-focus-within:text-[var(--accent)] transition-colors" />
             <input
-              className="h-14 w-full rounded-2xl border-2 border-[var(--border)] bg-[var(--surface)] px-4 pl-12 text-sm font-bold text-[var(--text)] outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent-soft)]"
-              placeholder="Cari data operasional..."
+              className={`${isMobile ? "h-12 text-xs" : "h-14 text-sm"} w-full rounded-2xl border-2 border-white/5 bg-white/5 px-4 pl-12 font-bold text-white outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent-soft)]`}
+              placeholder="Cari data..."
               type="search"
             />
           </div>
-          <div className="flex h-14 items-center gap-3 rounded-2xl border-2 border-[var(--border)] bg-[var(--surface)] px-5 text-sm font-black uppercase tracking-widest text-[var(--accent)] shadow-sm">
+          <div className={`${isMobile ? "h-12 text-[10px]" : "h-14 text-sm"} flex items-center gap-3 rounded-2xl border-2 border-white/5 bg-white/5 px-5 font-black uppercase tracking-widest text-[var(--accent)] shadow-sm`}>
             <Calendar className="h-5 w-5" />
             <span>{formatTanggalLengkap(new Date())}</span>
           </div>
-          <button className="relative h-14 w-14 flex items-center justify-center rounded-2xl border-2 border-[var(--border)] bg-[var(--surface)] text-[var(--text)] shadow-sm transition hover:border-[var(--accent)] hover:text-[var(--accent)] group">
+          <button className={`relative flex items-center justify-center rounded-2xl border-2 border-white/5 bg-white/5 text-white shadow-sm transition hover:border-[var(--accent)] hover:text-[var(--accent)] group ${
+            isMobile ? "h-12 w-12" : "h-14 w-14"
+          }`}>
             <Bell className="h-6 w-6 group-hover:animate-bounce" />
             <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-rose-500 text-[10px] font-black text-white rounded-full border-2 border-[var(--bg)] shadow-lg">
               3
@@ -146,74 +155,83 @@ export default function Dashboard() {
       </header>
 
       {/* ── METRICS ── */}
-      <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        <MetricCard icon={<Home />} label="Total Unit" value={stats.totalUnit} helper={`${stats.unitThisMonth} unit baru`} tone="emerald" />
-        <MetricCard icon={<Key />} label="Tersedia" value={stats.unitTersedia} helper={`${formatPercent(stats.availableRate)} dari total`} tone="blue" />
-        <MetricCard icon={<BadgeCheck />} label="Terjual" value={stats.unitTerjual} helper={`${stats.soldThisMonth} closing bulan ini`} tone="violet" />
-        <MetricCard icon={<UserPlus />} label="Leads Aktif" value={stats.activeLead} helper={`${stats.newLeadsThisMonth} leads baru`} tone="amber" />
-        <MetricCard icon={<Users />} label="Customer" value={stats.totalCustomer} helper={`${stats.newCustomersThisMonth} kontrak baru`} tone="teal" />
+      <section className={`grid gap-4 ${
+        isMobile ? "grid-cols-1" : isTablet ? "grid-cols-2" : "grid-cols-3 xl:grid-cols-5"
+      }`}>
+        <MetricCard icon={<Home />} label="Total Unit" value={stats.totalUnit} helper={`${stats.unitThisMonth} unit baru`} tone="emerald" isCompact={isDesktop} />
+        <MetricCard icon={<Key />} label="Tersedia" value={stats.unitTersedia} helper={`${formatPercent(stats.availableRate)}`} tone="blue" isCompact={isDesktop} />
+        <MetricCard icon={<BadgeCheck />} label="Terjual" value={stats.unitTerjual} helper={`${stats.soldThisMonth} closing`} tone="violet" isCompact={isDesktop} />
+        <MetricCard icon={<UserPlus />} label="Leads" value={stats.activeLead} helper={`${stats.newLeadsThisMonth} baru`} tone="amber" isCompact={isDesktop} />
+        <MetricCard icon={<Users />} label="Customer" value={stats.totalCustomer} helper={`${stats.newCustomersThisMonth} baru`} tone="teal" isCompact={isDesktop} />
       </section>
 
       {/* ── MAIN CONTENT GRID ── */}
-      <div className="grid grid-cols-1 gap-8 2xl:grid-cols-[1fr_360px]">
-        <div className="space-y-8">
+      <div className={`grid gap-6 ${
+        isMobile ? "grid-cols-1" : isTablet ? "grid-cols-1" : "2xl:grid-cols-[1fr_360px]"
+      }`}>
+        <div className={isDesktop ? "space-y-8" : "space-y-6"}>
           {/* Charts Row */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.5fr_1fr]">
-            <Panel title="Analytics Hub" subtitle="Growth & Performance Trends">
-              <div className="h-[340px]">
+          <div className={`grid gap-6 ${
+            isMobile ? "grid-cols-1" : "lg:grid-cols-[1.5fr_1fr]"
+          }`}>
+            <Panel title="Analytics Hub" subtitle="Growth Trends" isCompact={isDesktop}>
+              <div className={isMobile ? "h-[250px]" : "h-[340px]"}>
                 <ChartPanel chartData={data.chart} leads={data.leads} canReadFinance={canReadFinance} />
               </div>
             </Panel>
-            <Panel title="Inventory Health" subtitle="Unit Status Distribution">
+            <Panel title="Inventory" subtitle="Distribution" isCompact={isDesktop}>
                <UnitPieChart distribution={stats.unitDistribution} total={stats.totalUnit} />
             </Panel>
           </div>
 
           {/* Summaries Row */}
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <SummaryCard label="Revenue" value={formatRupiahCompact(stats.totalSales)} change="+18.5%" tone="blue" trend="up" />
-            <SummaryCard label="Gross Profit" value={formatRupiahCompact(stats.grossProfit)} change="+12.2%" tone="emerald" trend="up" />
-            <SummaryCard label="Active Booking" value={stats.totalBooking} change="+9.1%" tone="violet" trend="up" />
-            <SummaryCard label="Conversion" value={formatPercent(stats.conversionRate)} change="+6.4%" tone="amber" trend="up" />
+          <div className={`grid gap-4 ${
+            isMobile ? "grid-cols-2" : isTablet ? "grid-cols-2" : "lg:grid-cols-4"
+          }`}>
+            <SummaryCard label="Revenue" value={formatRupiahCompact(stats.totalSales)} change="+18%" tone="blue" trend="up" isCompact={isDesktop} />
+            <SummaryCard label="Profit" value={formatRupiahCompact(stats.grossProfit)} change="+12%" tone="emerald" trend="up" isCompact={isDesktop} />
+            <SummaryCard label="Booking" value={stats.totalBooking} change="+9%" tone="violet" trend="up" isCompact={isDesktop} />
+            <SummaryCard label="Conv." value={formatPercent(stats.conversionRate)} change="+6%" tone="amber" trend="up" isCompact={isDesktop} />
           </div>
 
           {/* Leads Table */}
           <Panel 
             title="Recent Leads" 
-            subtitle={`${stats.totalLead} active prospects pipeline`}
-            action={<GhostButton label="View CRM" />}
+            subtitle={`${stats.totalLead} active prospects`}
+            action={<GhostButton label="View CRM" isCompact={isDesktop} />}
+            isCompact={isDesktop}
           >
-            <LeadsTable leads={stats.latestLeads} />
+            <LeadsTable leads={stats.latestLeads} isCompact={isDesktop} />
           </Panel>
         </div>
 
         {/* Sidebar */}
-        <aside className="space-y-8">
-          <Panel title="Schedule" action={<GhostButton label="Calendar" />}>
-            <ScheduleList reminders={stats.reminders} />
+        <aside className={isDesktop ? "space-y-8" : "space-y-6"}>
+          <Panel title="Schedule" action={<GhostButton label="Calendar" isCompact={isDesktop} />} isCompact={isDesktop}>
+            <ScheduleList reminders={stats.reminders} isCompact={isDesktop} />
           </Panel>
 
-          <Panel title="Live Activity" action={<GhostButton label="Log" />}>
-            <ActivityList activities={stats.activities} />
+          <Panel title="Live Activity" action={<GhostButton label="Log" isCompact={isDesktop} />} isCompact={isDesktop}>
+            <ActivityList activities={stats.activities} isCompact={isDesktop} />
           </Panel>
 
-          <Panel title="Top Asset" subtitle="Highest Valued Property">
-             <BestProperty unit={stats.bestProperty} />
+          <Panel title="Top Asset" subtitle="Highest Value" isCompact={isDesktop}>
+             <BestProperty unit={stats.bestProperty} isCompact={isDesktop} />
           </Panel>
         </aside>
       </div>
 
       {/* Footer Branding */}
-      <footer className="relative overflow-hidden rounded-[40px] border border-[var(--border)] bg-[var(--surface)] p-8 shadow-[var(--shadow-card)]">
+      <footer className={`relative overflow-hidden rounded-[32px] border border-white/5 bg-[#1c1730] shadow-[var(--shadow-card)] ${isMobile ? "p-6" : "p-8"}`}>
         <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-[var(--accent)] to-[var(--accent-2)]" />
-        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="space-y-1 text-center sm:text-left">
-            <p className="text-sm font-black text-[var(--text)] uppercase tracking-widest">PropSuite Intelligence Engine v2.4</p>
-            <p className="text-xs font-bold text-[var(--muted)]">Automated data synchronization complete. All systems operational.</p>
+            <p className="text-[10px] font-black text-white uppercase tracking-widest">PropSuite v2.4 Engine</p>
+            <p className="text-[9px] font-bold text-white/40">Automated sync complete.</p>
           </div>
           <div className="flex items-center gap-4">
-             <div className="h-3 w-3 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.5)]" />
-             <span className="text-[10px] font-black uppercase tracking-widest text-[var(--muted)]">Cloud Secure</span>
+             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+             <span className="text-[9px] font-black uppercase tracking-widest text-white/40">Secure</span>
           </div>
         </div>
       </footer>
@@ -225,7 +243,7 @@ export default function Dashboard() {
 // UI Components
 // ─────────────────────────────────────────────
 
-function MetricCard({ icon, label, value, helper, tone }) {
+function MetricCard({ icon, label, value, helper, tone, isCompact }) {
   const tones = {
     emerald: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20 shadow-emerald-500/5",
     blue: "bg-blue-500/10 text-blue-500 border-blue-500/20 shadow-blue-500/5",
@@ -235,23 +253,23 @@ function MetricCard({ icon, label, value, helper, tone }) {
   };
 
   return (
-    <article className="metric-card relative group p-6 h-full flex flex-col">
-       <div className={`h-12 w-12 rounded-2xl flex items-center justify-center border ${tones[tone]} mb-6 transition-transform group-hover:scale-110 duration-500`}>
-         {icon}
+    <article className={`metric-card relative group flex flex-col border-white/5 bg-[#1c1730] ${isCompact ? "p-4" : "p-6"}`}>
+       <div className={`${isCompact ? "h-10 w-10 rounded-xl mb-4" : "h-12 w-12 rounded-2xl mb-6"} flex items-center justify-center border ${tones[tone]} transition-transform group-hover:scale-110 duration-500`}>
+         {cloneElement(icon, { size: isCompact ? 18 : 24 })}
        </div>
        <div className="space-y-1 mt-auto">
-         <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--muted)] opacity-70">{label}</p>
-         <p className="font-display text-4xl font-black text-[var(--text)] tracking-tight">{value}</p>
+         <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">{label}</p>
+         <p className={`font-display font-black text-white tracking-tight ${isCompact ? "text-2xl" : "text-4xl"}`}>{value}</p>
        </div>
-       <div className="mt-4 pt-4 border-t border-[var(--border)] flex items-center justify-between">
-         <span className="text-[11px] font-bold text-[var(--muted)]">{helper}</span>
-         <ChevronRight className="h-3.5 w-3.5 text-[var(--muted)] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+       <div className={`${isCompact ? "mt-3 pt-3" : "mt-4 pt-4"} border-t border-white/5 flex items-center justify-between`}>
+         <span className="text-[10px] font-bold text-white/40">{helper}</span>
+         <ChevronRight className="h-3 w-3 text-white/20 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
        </div>
     </article>
   );
 }
 
-function SummaryCard({ label, value, change, trend, tone }) {
+function SummaryCard({ label, value, change, trend, tone, isCompact }) {
   const tones = {
     emerald: "text-emerald-500 bg-emerald-500/10",
     blue: "text-blue-500 bg-blue-500/10",
@@ -260,31 +278,31 @@ function SummaryCard({ label, value, change, trend, tone }) {
   };
 
   return (
-    <article className="surface-card p-6">
-      <div className="flex items-center justify-between mb-6">
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--muted)]">{label}</p>
-        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-1 ${tones[tone]}`}>
-          {trend === 'up' && <TrendingUp className="h-3 w-3" />}
+    <article className={`surface-card border-white/5 bg-[#1c1730] ${isCompact ? "p-4" : "p-6"}`}>
+      <div className={`flex items-center justify-between ${isCompact ? "mb-4" : "mb-6"}`}>
+        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">{label}</p>
+        <span className={`px-2 py-0.5 rounded-full text-[8px] font-black flex items-center gap-0.5 ${tones[tone]}`}>
+          {trend === 'up' && <TrendingUp className="h-2.5 w-2.5" />}
           {change}
         </span>
       </div>
       <div className="space-y-1">
-        <h4 className="text-2xl font-black text-[var(--text)] tracking-tight">{value}</h4>
-        <p className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-widest">Vs Last Month</p>
+        <h4 className={`font-black text-white tracking-tight ${isCompact ? "text-xl" : "text-2xl"}`}>{value}</h4>
+        <p className="text-[8px] font-bold text-white/20 uppercase tracking-widest">Vs Last Month</p>
       </div>
     </article>
   );
 }
 
-function Panel({ title, subtitle, action, children }) {
+function Panel({ title, subtitle, action, children, isCompact }) {
   return (
-    <section className="surface-card relative overflow-hidden rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-8 shadow-[var(--shadow-card)]">
-      <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-[var(--accent)] via-[var(--accent-2)] to-[var(--accent-deep)] opacity-20" />
-      <div className="relative z-10 flex items-start justify-between mb-10">
+    <section className={`surface-card relative overflow-hidden rounded-[24px] border border-white/5 bg-[#1c1730] shadow-[var(--shadow-card)] ${isCompact ? "p-5" : "p-8"}`}>
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[var(--accent)] via-[var(--accent-2)] to-[var(--accent-deep)] opacity-20" />
+      <div className={`relative z-10 flex items-start justify-between ${isCompact ? "mb-6" : "mb-10"}`}>
         <div>
-          <h2 className="text-xl font-black tracking-tight text-[var(--text)] uppercase">{title}</h2>
+          <h2 className={`font-black tracking-tight text-white uppercase ${isCompact ? "text-base" : "text-xl"}`}>{title}</h2>
           {subtitle && (
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--muted)] mt-1.5 opacity-60">
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 mt-1 opacity-60">
               {subtitle}
             </p>
           )}
@@ -296,41 +314,35 @@ function Panel({ title, subtitle, action, children }) {
   );
 }
 
-function LeadsTable({ leads }) {
+function LeadsTable({ leads, isCompact }) {
   return (
     <div className="table-container -mx-8 -mb-8 border-none shadow-none bg-transparent overflow-x-auto">
       <table className="table-modern w-full">
         <thead>
-          <tr>
-            <th>Full Name</th>
-            <th>Source</th>
-            <th>Status</th>
-            <th>Interest</th>
-            <th className="text-right">Budget</th>
+          <tr className={isCompact ? "h-10" : "h-14"}>
+            <th className={isCompact ? "px-4 py-2 text-[10px] bg-[#2a2438] text-white" : "bg-[#2a2438] text-white"}>Name</th>
+            <th className={isCompact ? "px-4 py-2 text-[10px] bg-[#2a2438] text-white" : "bg-[#2a2438] text-white"}>Status</th>
+            <th className={isCompact ? "px-4 py-2 text-right text-[10px] bg-[#2a2438] text-white" : "text-right bg-[#2a2438] text-white"}>Budget</th>
           </tr>
         </thead>
         <tbody>
           {!leads.length ? (
             <tr>
-              <td colSpan="5" className="py-20 text-center text-sm font-bold text-[var(--muted)]">
-                Belum ada data leads terbaru.
-              </td>
+              <td colSpan={3} className="py-10 text-center text-xs font-bold text-white/20">No leads.</td>
             </tr>
           ) : (
             leads.map((l) => (
               <tr key={l.id} className="group cursor-pointer">
-                <td>
-                  <div className="flex items-center gap-3">
-                    <Avatar name={l.nama} />
-                    <span className="font-bold text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">{l.nama}</span>
+                <td className={isCompact ? "px-4 py-2 border-white/5" : "border-white/5"}>
+                  <div className="flex items-center gap-2">
+                    <Avatar name={l.nama} isCompact={isCompact} />
+                    <span className={`font-bold text-white group-hover:text-[var(--accent)] transition-colors ${isCompact ? "text-xs" : ""}`}>{l.nama}</span>
                   </div>
                 </td>
-                <td className="text-[10px] font-black uppercase tracking-widest text-[var(--muted)]">{l.sumber}</td>
-                <td>
+                <td className={isCompact ? "px-4 py-2 border-white/5" : "border-white/5"}>
                    <StatusBadge status={l.status || "Baru"} />
                 </td>
-                <td className="text-[11px] font-bold text-[var(--muted)]">{l.minat || '-'}</td>
-                <td className="text-right font-black text-[var(--text)]">{formatRupiahCompact(l.budget)}</td>
+                <td className={`text-right font-black text-white ${isCompact ? "px-4 py-2 text-xs border-white/5" : "border-white/5"}`}>{formatRupiahCompact(l.budget)}</td>
               </tr>
             ))
           )}
@@ -340,50 +352,49 @@ function LeadsTable({ leads }) {
   );
 }
 
-function ScheduleList({ reminders }) {
+function ScheduleList({ reminders, isCompact }) {
   if (!reminders.length) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-10 opacity-40">
-        <Calendar className="h-12 w-12" strokeWidth={1} />
-        <p className="text-[10px] font-black uppercase tracking-widest">No upcoming events</p>
+        <Calendar className="h-10 w-10" strokeWidth={1} />
+        <p className="text-[10px] font-black uppercase tracking-widest text-white/40">No events</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className={isCompact ? "space-y-3" : "space-y-4"}>
       {reminders.map((r) => (
-        <div key={r.id} className="group flex items-center gap-4 p-4 rounded-2xl bg-[var(--surface-soft)]/50 border border-[var(--border)] hover:border-[var(--accent)] hover:bg-white transition-all">
-          <div className="h-10 w-10 shrink-0 rounded-xl bg-white border border-[var(--border)] flex flex-col items-center justify-center shadow-sm group-hover:bg-[var(--accent)] group-hover:text-white transition-colors">
-            <span className="text-[8px] font-black uppercase leading-none mb-0.5 opacity-60">Jun</span>
-            <span className="text-sm font-black leading-none">15</span>
+        <div key={r.id} className={`group flex items-center gap-3 rounded-2xl bg-white/5 border border-white/5 hover:border-[var(--accent)] hover:bg-white/10 transition-all ${isCompact ? "p-3" : "p-4"}`}>
+          <div className={`${isCompact ? "h-8 w-8 rounded-lg" : "h-10 w-10 rounded-xl"} shrink-0 bg-[#1c1730] border border-white/5 flex flex-col items-center justify-center shadow-sm group-hover:bg-[var(--accent)] group-hover:text-black transition-colors`}>
+            <span className="text-[7px] font-black uppercase leading-none mb-0.5 opacity-60">Jun</span>
+            <span className="text-xs font-black leading-none">15</span>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[13px] font-black text-[var(--text)] truncate">{r.lead_nama || "Follow-up"}</p>
-            <p className="text-[11px] font-bold text-[var(--muted)] truncate opacity-70">{r.catatan}</p>
+            <p className={`font-black text-white truncate ${isCompact ? "text-xs" : "text-[13px]"}`}>{r.lead_nama || "Follow-up"}</p>
+            <p className="text-[10px] font-bold text-white/40 truncate opacity-70">{r.catatan}</p>
           </div>
-          <ChevronRight className="h-4 w-4 text-[var(--muted)]" />
+          <ChevronRight className="h-4 w-4 text-white/20" />
         </div>
       ))}
     </div>
   );
 }
 
-function ActivityList({ activities }) {
+function ActivityList({ activities, isCompact }) {
   return (
-    <div className="space-y-6">
+    <div className={isCompact ? "space-y-4" : "space-y-6"}>
       {activities.slice(0, 5).map((a, idx) => (
-        <div key={idx} className="flex gap-4">
+        <div key={idx} className="flex gap-3">
           <div className="relative flex flex-col items-center">
-            <div className={`h-8 w-8 rounded-xl flex items-center justify-center shadow-sm text-white ${idx === 0 ? 'bg-[var(--accent)]' : 'bg-[var(--muted)]'}`}>
-              <Activity className="h-4 w-4" />
+            <div className={`${isCompact ? "h-6 w-6 rounded-lg" : "h-8 w-8 rounded-xl"} flex items-center justify-center shadow-sm text-white ${idx === 0 ? 'bg-[var(--accent)] text-black' : 'bg-white/10'}`}>
+              <Activity className="h-3 w-3" />
             </div>
-            {idx !== 4 && <div className="w-[1px] flex-1 bg-[var(--border)] mt-2" />}
+            {idx !== 4 && <div className="w-[1px] flex-1 bg-white/5 mt-2" />}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-bold text-[var(--text)] leading-snug">{a.label}</p>
-            <p className="text-[11px] font-bold text-[var(--muted)] mt-1 uppercase tracking-tight">{a.meta}</p>
-            <p className="text-[10px] font-medium text-[var(--muted)] mt-2 opacity-60">{formatActivityTime(a.date)}</p>
+            <p className={`font-bold text-white leading-snug ${isCompact ? "text-xs" : "text-sm"}`}>{a.label}</p>
+            <p className="text-[9px] font-bold text-white/40 mt-1 uppercase tracking-tight">{a.meta}</p>
           </div>
         </div>
       ))}
@@ -391,56 +402,56 @@ function ActivityList({ activities }) {
   );
 }
 
-function BestProperty({ unit }) {
-  if (!unit) return <div className="py-10 text-center opacity-40">No data available</div>;
+function BestProperty({ unit, isCompact }) {
+  if (!unit) return <div className="py-10 text-center opacity-40 text-white/40">No data available</div>;
   
   return (
-    <article className="group relative overflow-hidden rounded-[32px] border border-[var(--border)] bg-white shadow-xl">
-       <div className="h-48 overflow-hidden">
+    <article className="group relative overflow-hidden rounded-[24px] border border-white/5 bg-[#1c1730] shadow-xl">
+       <div className={isCompact ? "h-32" : "h-48"}>
          <img src="/bahan acak/zac-gudakov-UPbYh3A5cdg-unsplash.jpg" alt="Best Asset" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-         <div className="absolute top-4 left-4">
-            <span className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-black uppercase tracking-widest text-[var(--accent)] shadow-lg">
+         <div className="absolute top-3 left-3">
+            <span className="px-2 py-0.5 rounded-md bg-[var(--accent)] text-black text-[9px] font-black uppercase tracking-widest shadow-lg">
               Top Value
             </span>
          </div>
        </div>
 
-       <div className="p-6">
+       <div className={isCompact ? "p-4" : "p-6"}>
           <div className="flex justify-between items-start mb-4">
              <div>
-               <h3 className="text-xl font-black text-[var(--text)] tracking-tight">{unit.kode}</h3>
-               <p className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-widest flex items-center gap-1.5 mt-1">
-                 <MapPin className="h-3.5 w-3.5 text-rose-500" /> Blok {unit.blok} • {unit.tipe}
+               <h3 className={`font-black text-white tracking-tight ${isCompact ? "text-base" : "text-xl"}`}>{unit.kode}</h3>
+               <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest flex items-center gap-1.5 mt-1">
+                 <MapPin className="h-3 w-3 text-rose-500" /> Blok {unit.blok}
                </p>
              </div>
-             <div className="h-10 w-10 rounded-xl bg-[var(--accent-soft)] text-[var(--accent)] flex items-center justify-center">
-               <ArrowUpRight className="h-5 w-5" />
+             <div className="h-8 w-8 rounded-lg bg-[var(--accent-soft)] text-[var(--accent)] flex items-center justify-center">
+               <ArrowUpRight className="h-4 w-4" />
              </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 py-4 border-y border-[var(--border)] mb-4">
+          <div className="grid grid-cols-2 gap-4 py-3 border-y border-white/5 mb-4">
              <div className="flex items-center gap-2">
-               <Maximize2 className="h-4 w-4 text-[var(--accent)]" />
-               <span className="text-xs font-bold">{unit.luas_tanah} m²</span>
+               <Maximize2 className="h-3.5 w-3.5 text-[var(--accent)]" />
+               <span className="text-[10px] font-bold text-white/80">{unit.luas_tanah} m²</span>
              </div>
-             <div className="text-right font-black text-[var(--accent)]">
+             <div className={`text-right font-black text-[var(--accent)] ${isCompact ? "text-xs" : "text-sm"}`}>
                {formatRupiahCompact(unit.harga)}
              </div>
           </div>
           
-          <button className="w-full py-3 rounded-2xl bg-[var(--navy)] text-white text-xs font-black uppercase tracking-widest hover:brightness-125 transition-all">
-            Asset Details
+          <button className="w-full py-2.5 rounded-xl bg-[var(--accent)] text-black text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all">
+            Details
           </button>
        </div>
     </article>
   );
 }
 
-function Avatar({ name }) {
+function Avatar({ name, isCompact }) {
   const initials = (name || "?").trim()[0].toUpperCase();
   return (
-    <div className="h-10 w-10 shrink-0 rounded-xl bg-[var(--accent-soft)] text-[var(--accent)] flex items-center justify-center font-black text-xs shadow-sm border border-white/50">
+    <div className={`${isCompact ? "h-7 w-7 text-[10px]" : "h-10 w-10 text-xs"} shrink-0 rounded-lg bg-[var(--accent-soft)] text-[var(--accent)] flex items-center justify-center font-black shadow-sm border border-white/10`}>
       {initials}
     </div>
   );
@@ -455,15 +466,15 @@ function StatusBadge({ status }) {
   };
   const toneClass = tones[status.toLowerCase()] || "bg-slate-500/10 text-slate-500 border-slate-500/20";
   return (
-    <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${toneClass}`}>
+    <span className={`px-1.5 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest border ${toneClass}`}>
       {status}
     </span>
   );
 }
 
-function GhostButton({ label }) {
+function GhostButton({ label, isCompact }) {
   return (
-    <button className="flex items-center gap-2 h-10 px-4 rounded-xl border border-[var(--border)] bg-white text-[10px] font-black uppercase tracking-widest text-[var(--muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all">
+    <button className={`flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 font-black uppercase tracking-widest text-white/60 hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all ${isCompact ? "h-8 px-3 text-[8px]" : "h-10 px-4 text-[10px]"}`}>
       {label}
       <ArrowUpRight className="h-3.5 w-3.5" />
     </button>
@@ -541,20 +552,6 @@ function formatRupiahCompact(v) {
   if (n >= 1e9) return `Rp ${(n / 1e9).toFixed(1)} M`;
   if (n >= 1e6) return `Rp ${(n / 1e6).toFixed(0)} jt`;
   return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(n);
-}
-
-function formatActivityTime(t) {
-  if (!t) return "-";
-  const date = new Date(t);
-  if (isNaN(date.getTime())) return "-";
-  
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMin = Math.floor(diffMs / 60000);
-  if (diffMin < 60) return `${diffMin} min ago`;
-  const diffHrs = Math.floor(diffMin / 60);
-  if (diffHrs < 24) return `${diffHrs} hours ago`;
-  return formatTanggalLengkap(date);
 }
 
 function formatTanggalLengkap(t) {

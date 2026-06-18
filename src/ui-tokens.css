@@ -1,133 +1,73 @@
 
 :root {
-  /* Atmosphere & Base — "Comfortable Luxury" (light) */
-  --bg: #f7f4ef;
-  --surface: #ffffff;
-  --surface-soft: #f2ede4;
-  --surface-glass: rgba(255, 255, 255, 0.68);
-
-  /* Brand Colors (Violet Aurora) */
-  --accent: #6d5bfa;
-  --accent-soft: #efebff;
-  --accent-deep: #5240e0;
-  --accent-glow: rgba(109, 91, 250, 0.18);
-
-  /* Luxury accent (warm brass / gold) */
-  --accent-2: #c8a050;
-  --accent-2-soft: rgba(200, 160, 80, 0.14);
-  --accent-2-deep: #a9803a;
-
-  /* Functional Colors */
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #f43f5e;
-  --success-soft: rgba(16, 184, 129, 0.14);
-  --warning-soft: rgba(245, 158, 11, 0.14);
-  --danger-soft: rgba(244, 63, 94, 0.14);
-  --info-soft: rgba(109, 91, 250, 0.14);
-  --purple-soft: rgba(168, 85, 247, 0.16);
-
-  /* Text & Contrast */
-  --navy: #1c1730;
-  --text: #2a2438;
-  --muted: #8b84a1;
-  --border: rgba(43, 36, 58, 0.09);
-
-  /* Geometry */
-  --radius-sm: 16px;
-  --radius-md: 26px;
-  --radius-lg: 42px;
-
-  /* Depth (Layered Shadows, violet-tinted for warmth) */
-  --shadow-soft: 0 4px 24px rgba(43, 36, 58, 0.04);
-  --shadow-card: 0 20px 45px rgba(43, 36, 58, 0.07), 0 1px 3px rgba(0, 0, 0, 0.02);
-  --shadow-float: 0 35px 70px rgba(109, 91, 250, 0.16), 0 10px 24px rgba(0, 0, 0, 0.03);
-  --shadow-glow: 0 25px 60px -10px rgba(109, 91, 250, 0.35);
-
-  /* Spacing */
-  --space: 8px;
-
-  /* Typography */
-  --font-main: 'Inter', system-ui, sans-serif;
-  --font-heading: 'Plus Jakarta Sans', sans-serif;
-  --font-display: 'Fraunces', 'Plus Jakarta Sans', serif;
-
-  /* legacy aliases for compatibility with some files */
-  --g0: var(--bg);
-  --g1: var(--accent);
-  --g2: var(--accent-deep);
-  --g3: var(--accent);
-  --gold: var(--accent-2);
-  --gold2: var(--accent-2-deep);
-  --gold3: var(--accent-2-soft);
-  --cream: var(--bg);
-  --white: var(--surface);
-  --border-color: var(--border);
-  --text-main: var(--text);
-  --text-muted: var(--muted);
-  --sans: var(--font-heading);
-  --serif: var(--font-display);
-
-  /* tone aliases referenced across pages */
-  --blue: #3b82f6;
-  --green: var(--success);
-  --orange: var(--warning);
-  --red: var(--danger);
-  --purple: #a855f7;
-  --teal: #14b8a6;
-
-  /* Refinement */
-  --nav-bg: var(--surface-glass);
-  --nav-border: rgba(255, 255, 255, 0.4);
-  --item-hover: rgba(109, 91, 250, 0.06);
-  --item-active: var(--accent-soft);
-  --item-active-text: var(--accent);
-}
-
-[data-theme='dark'] {
-  /* Atmosphere & Base — "Futuristic Glow" (dark) */
+  /* Atmosphere & Base — PropSuite Default (Dark) */
   --bg: #0a0914;
   --surface: #14121f;
   --surface-soft: #1c1930;
-  --surface-glass: rgba(20, 18, 31, 0.72);
+  --surface-glass: rgba(20, 18, 31, 0.8);
 
-  --accent: #8e7cff;
-  --accent-soft: rgba(142, 124, 255, 0.14);
-  --accent-deep: #6d5bfa;
-  --accent-glow: rgba(142, 124, 255, 0.4);
+  /* Brand Colors (PropSuite Gold) */
+  --accent: #fbbf24;
+  --accent-soft: rgba(251, 191, 36, 0.1);
+  --accent-deep: #d97706;
+  --accent-glow: rgba(251, 191, 36, 0.3);
 
-  --accent-2: #f0cb7e;
-  --accent-2-soft: rgba(240, 203, 126, 0.14);
-  --accent-2-deep: #d6a94f;
+  /* Luxury accent (Violet Aurora) */
+  --accent-2: #6d5bfa;
+  --accent-2-soft: rgba(109, 91, 250, 0.14);
+  --accent-2-deep: #5240e0;
 
-  --navy: #f7f5ff;
-  --text: #ece9f7;
-  --muted: #9a93b5;
+  /* Functional Colors */
+  --success: #22c55e;
+  --warning: #facc15;
+  --danger: #ef4444;
+  --success-soft: rgba(34, 197, 94, 0.14);
+  --warning-soft: rgba(250, 204, 21, 0.14);
+  --danger-soft: rgba(239, 68, 68, 0.14);
+  --info-soft: rgba(59, 130, 246, 0.14);
+  --purple-soft: rgba(168, 85, 247, 0.16);
+
+  /* Text & Contrast */
+  --navy: #14121f;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.1);
+
+  /* Geometry */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* Depth */
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-float: 0 20px 50px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 20px var(--accent-glow);
+
+  /* Refinement */
+  --nav-bg: #1c1730;
+  --nav-border: rgba(255, 255, 255, 0.05);
+  --item-hover: rgba(255, 255, 255, 0.05);
+  --item-active: var(--accent);
+  --item-active-text: #000000;
+}
+
+[data-theme='dark'] {
+  --bg: #0a0914;
+  --surface: #14121f;
+  --surface-soft: #1c1930;
+  --surface-glass: rgba(20, 18, 31, 0.8);
+
+  --accent: #fbbf24;
+  --accent-soft: rgba(251, 191, 36, 0.15);
+  --accent-deep: #f59e0b;
+  --accent-glow: rgba(251, 191, 36, 0.4);
+
+  --text: #f8fafc;
+  --muted: #94a3b8;
   --border: rgba(255, 255, 255, 0.08);
 
-  --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.4);
-  --shadow-card: 0 25px 60px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.03) inset;
-  --shadow-float: 0 35px 90px rgba(142, 124, 255, 0.32), 0 1px 0 rgba(255, 255, 255, 0.04) inset;
-  --shadow-glow: 0 25px 70px -10px rgba(142, 124, 255, 0.55);
-
-  --success-soft: rgba(16, 184, 129, 0.18);
-  --warning-soft: rgba(251, 191, 36, 0.15);
-  --danger-soft: rgba(248, 113, 113, 0.18);
-  --info-soft: rgba(142, 124, 255, 0.18);
-  --purple-soft: rgba(168, 85, 247, 0.22);
-
-  --blue: #60a5fa;
-  --green: #34d399;
-  --orange: #fbbf24;
-  --red: #fb7185;
-  --purple: #c084fc;
-  --teal: #2dd4bf;
-
-  --nav-bg: rgba(20, 18, 31, 0.6);
-  --nav-border: rgba(255, 255, 255, 0.07);
-  --item-hover: rgba(142, 124, 255, 0.08);
-  --item-active: rgba(142, 124, 255, 0.16);
-  --item-active-text: #ffffff;
+  --nav-bg: #14121f;
 }
 
 /* ───────────────────────────────────────────
@@ -142,18 +82,11 @@ body {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.3s ease, color 0.3s ease;
-  background-image:
-    radial-gradient(at 8% 0%, var(--accent-glow) 0px, transparent 45%),
-    radial-gradient(at 95% 12%, var(--accent-2-soft) 0px, transparent 40%);
-  background-attachment: fixed;
-  background-repeat: no-repeat;
 }
 
 [data-theme='dark'] body {
-  background-image:
-    radial-gradient(at 12% -5%, rgba(142, 124, 255, 0.22) 0px, transparent 45%),
-    radial-gradient(at 100% 0%, rgba(240, 203, 126, 0.08) 0px, transparent 35%),
-    radial-gradient(at 50% 100%, rgba(109, 91, 250, 0.12) 0px, transparent 45%);
+  background-image: none;
+  background-color: #0a0914;
 }
 
 h1,
@@ -162,202 +95,62 @@ h3,
 h4,
 .font-heading {
   font-family: var(--font-heading);
-  letter-spacing: -0.03em;
-  font-weight: 800;
-}
-
-/* Display / luxury serif heading — for hero & marketing surfaces */
-.font-display {
-  font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.font-display-italic {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-weight: 700;
 }
 
 /* ───────────────────────────────────────────
-   Glass Utility
-   ─────────────────────────────────────────── */
-.glass {
-  background: var(--surface-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--nav-border);
-}
-
-/* ───────────────────────────────────────────
-   Card Modernization
-   ─────────────────────────────────────────── */
-.surface-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.surface-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), transparent 40%, rgba(109, 91, 250, 0.05));
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-.surface-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: var(--shadow-float);
-  border-color: var(--accent-glow);
-}
-
-/* ───────────────────────────────────────────
-   Metrics & Stats
-   ─────────────────────────────────────────── */
-.metric-card {
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
-  padding: 24px;
-  border: 1px solid var(--border);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.metric-card::before {
-  content: '';
-  position: absolute;
-  inset: -40% -40% auto auto;
-  width: 140px;
-  height: 140px;
-  background: radial-gradient(circle, var(--accent-glow), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-
-.metric-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--accent-glow);
-  box-shadow: var(--shadow-float);
-}
-
-.metric-card:hover::before {
-  opacity: 1;
-}
-
-/* ───────────────────────────────────────────
-   Status Badge Refinement
-   ─────────────────────────────────────────── */
-.status-badge {
-  border-radius: 12px;
-  padding: 6px 14px;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-}
-
-/* ───────────────────────────────────────────
-   Navigation Item
-   ─────────────────────────────────────────── */
-.nav-item {
-  border-radius: 18px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin: 4px 0;
-}
-
-.nav-item.active {
-  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
-  color: white !important;
-  box-shadow: 0 12px 28px var(--accent-glow);
-}
-
-/* ───────────────────────────────────────────
-   Modern Table
+   Modern Table (Design Match)
    ─────────────────────────────────────────── */
 .table-container {
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-card);
 }
 
 .table-modern {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
 }
 
 .table-modern th {
-  background: var(--surface-soft);
-  padding: 18px 24px;
-  font-size: 11px;
-  font-weight: 800;
+  background: #2a2438;
+  padding: 16px 20px;
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
-  color: var(--muted);
-  letter-spacing: 0.1em;
-  border-bottom: 1px solid var(--border);
+  color: #ffffff;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
 }
 
 .table-modern td {
-  padding: 20px 24px;
+  padding: 16px 20px;
   border-bottom: 1px solid var(--border);
   font-size: 14px;
-}
-
-.table-modern tr:last-child td {
-  border-bottom: none;
-}
-
-.table-modern tr:hover td {
-  background: var(--accent-soft);
-  color: var(--accent-deep);
-}
-
-[data-theme='dark'] .table-modern tr:hover td {
   color: var(--text);
 }
 
-/* ───────────────────────────────────────────
-   Buttons — Pills with Premium Finish
-   ─────────────────────────────────────────── */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border-radius: 999px;
-  font-family: var(--font-heading);
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
-  color: #ffffff;
-  box-shadow: var(--shadow-glow);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+.table-modern tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.05);
+/* ───────────────────────────────────────────
+   Navigation Item (Design Match)
+   ─────────────────────────────────────────── */
+.nav-item {
+  border-radius: 8px;
+  transition: all 0.2s;
+  margin: 2px 0;
 }
+
+.nav-item.active {
+  background: var(--accent);
+  color: #000000 !important;
+  box-shadow: 0 4px 12px var(--accent-glow);
+}
+
 
 .btn-onyx {
   display: inline-flex;

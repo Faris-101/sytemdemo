@@ -153,83 +153,43 @@ export default function Navbar({ onClose }) {
   const isDesktopWorkspace = viewMode === 'desktop';
 
   return (
-    <aside className="relative flex h-screen w-full max-w-[280px] shrink-0 flex-col overflow-hidden rounded-r-[40px] border-r border-[var(--border)] bg-[var(--surface)] text-[var(--text)] shadow-2xl transition-all duration-300">
-      {/* ── AMBIENT GLOW ── */}
-      <div className="glow-orb -left-32 -top-32 h-80 w-80 opacity-40 bg-[radial-gradient(circle,var(--accent-glow),transparent_70%)]" />
-      <div className="glow-orb -right-32 bottom-20 h-64 w-64 opacity-20 bg-[radial-gradient(circle,var(--accent-2-soft),transparent_70%)]" />
-
-      {/* ── DESKTOP BRANDING (Only if Desktop Workspace) ── */}
-      {isDesktopWorkspace && (
-        <div className="relative z-10 hidden lg:flex items-center justify-between px-8 py-10">
-          <div className="flex items-center gap-4 group cursor-pointer">
-            <div className="relative h-12 w-12 shrink-0 rounded-[18px] bg-white shadow-xl shadow-[var(--accent-glow)] overflow-hidden p-2 border border-[var(--border)] group-hover:scale-105 transition-transform duration-500">
-              <img src="/assets/logo.svg" alt="Logo" className="h-full w-full object-contain" />
-              <span className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-500 shadow-sm" />
-            </div>
-            <div>
-              <h1 className="font-display text-2xl font-black tracking-tight leading-none text-[var(--text)]">
-                Prop<span className="text-[var(--accent)]">Suite</span>
-              </h1>
-              <p className="mt-1 text-[10px] font-black uppercase tracking-[0.25em] text-[var(--muted)] opacity-60">Control Center</p>
-            </div>
-          </div>
-          <button
-            onClick={toggleTheme}
-            className="h-10 w-10 flex items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--muted)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-all"
-          >
-            {theme === "light" ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
-          </button>
+    <aside className="relative flex h-screen w-full max-w-[280px] shrink-0 flex-col overflow-hidden bg-[#1c1730] text-white shadow-2xl transition-all duration-300">
+      
+      {/* ── BRANDING ── */}
+      <div className="relative z-10 flex items-center gap-4 px-6 py-8">
+        <div className="relative h-10 w-10 shrink-0 rounded-lg bg-white p-1.5 overflow-hidden">
+          <img src="/assets/logo.svg" alt="Logo" className="h-full w-full object-contain" />
         </div>
-      )}
-
-      {/* ── MOBILE/DRAWER BRANDING (If Mobile/Tablet Workspace OR Screen Small) ── */}
-      {(!isDesktopWorkspace || window.innerWidth < 1024) && (
-        <div className="relative z-10 flex items-center justify-between px-6 py-6">
-          <div className="flex items-center gap-3.5">
-            <div className="h-10 w-10 rounded-2xl bg-white shadow-lg overflow-hidden p-1.5 border border-[var(--border)]">
-               <img src="/assets/logo.svg" alt="Logo" className="h-full w-full object-contain" />
-            </div>
-            <h1 className="font-display text-xl font-bold tracking-tight text-[var(--text)]">
-              Prop<span className="text-[var(--accent)]">Suite</span>
-            </h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <button onClick={toggleTheme} className="h-11 w-11 flex items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--muted)]">
-              {theme === "light" ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
-            </button>
-            <button onClick={onClose} className="h-11 w-11 flex items-center justify-center rounded-2xl bg-rose-500/10 text-rose-500 transition-all">
-              <X className="h-5 w-5" strokeWidth={3} />
-            </button>
-          </div>
+        <div>
+          <h1 className="font-display text-xl font-black tracking-tight leading-none text-white">
+            Prop<span className="text-[var(--accent)]">Suite</span>
+          </h1>
+          <p className="mt-1 text-[8px] font-black uppercase tracking-[0.2em] text-white/40">Management System</p>
         </div>
-      )}
+      </div>
 
-      {/* ── USER PROFILE CARD ── */}
-      <div className="relative z-10 mx-5 mb-8 overflow-hidden rounded-[32px] border border-[var(--border)] bg-gradient-to-br from-[var(--surface)] to-[var(--surface-soft)] p-5 shadow-[var(--shadow-card)]">
-        <div className="absolute right-[-20px] top-[-20px] h-24 w-24 rounded-full bg-[var(--accent-glow)] opacity-50 blur-xl" />
-        <div className="relative z-10 flex items-center gap-4">
-          <div className="h-14 w-14 shrink-0 rounded-2xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-deep)] flex items-center justify-center text-sm font-black text-white shadow-xl shadow-[var(--accent-glow)] border-2 border-white/20">
+      {/* ── USER INFO (Simple for Sidebar) ── */}
+      <div className="relative z-10 mx-4 mb-6 px-2">
+        <div className="flex items-center gap-3 py-4 border-y border-white/5">
+          <div className="h-10 w-10 shrink-0 rounded-lg bg-[var(--accent)] flex items-center justify-center text-xs font-black text-black">
             {initials}
           </div>
           <div className="min-w-0">
-            <div className="truncate text-[15px] font-black text-[var(--text)] leading-tight">{user?.nama}</div>
-            <div className={`mt-1 text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md inline-block bg-[var(--surface)] border border-[var(--border)] ${ROLE_COLOR[user?.role] || 'text-[var(--accent)]'}`}>
-              {user?.role}
-            </div>
+            <div className="truncate text-sm font-bold text-white">{user?.nama}</div>
+            <div className="text-[9px] font-black uppercase tracking-widest text-[var(--accent)]">{user?.role}</div>
           </div>
         </div>
       </div>
 
       {/* ── NAVIGATION ── */}
-      <nav className="app-scrollbar relative z-10 flex-1 space-y-1.5 overflow-y-auto px-4 pb-8">
+      <nav className="app-scrollbar relative z-10 flex-1 space-y-1 overflow-y-auto px-3 pb-8">
         {allowedMenus.map((item, index) => {
           if (item.group) {
             return (
               <div
                 key={`group-${index}`}
-                className="flex items-center gap-2 px-3 pb-3 pt-8 text-[9px] font-black uppercase tracking-[0.25em] text-[var(--muted)] opacity-50 first:pt-2"
+                className="px-4 pb-2 pt-6 text-[9px] font-black uppercase tracking-[0.2em] text-white/30"
               >
-                <div className="h-1 w-1 rounded-full bg-[var(--accent)]" />
                 {item.group}
               </div>
             );
@@ -245,27 +205,22 @@ export default function Navbar({ onClose }) {
               end={item.to === "/" || item.to === "/dashboard"}
               onClick={handleNavClick}
               className={({ isActive }) =>
-                `nav-item group flex items-center gap-4 px-4 py-4.5 text-[13.5px] font-bold transition-all rounded-[22px] ${
+                `nav-item group flex items-center gap-3 px-4 py-3 text-[13px] font-medium transition-all ${
                   isActive
-                    ? "active bg-[var(--accent)] text-white shadow-lg shadow-[var(--accent-glow)] hover:bg-[var(--accent-deep)]"
-                    : "text-[var(--muted)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)]"
+                    ? "active bg-[var(--accent)] text-black font-bold shadow-lg"
+                    : "text-white/60 hover:bg-white/5 hover:text-white"
                 }`
               }
             >
               {({ isActive }) => (
                 <>
-                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-all ${
-                    isActive ? "bg-white/20 text-white" : "bg-[var(--surface-soft)] text-[var(--muted)] group-hover:bg-white group-hover:text-[var(--accent)] group-hover:shadow-sm"
-                  }`}>
-                    <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 2.2} />
-                  </span>
+                  <Icon className={`h-4.5 w-4.5 ${isActive ? "text-black" : "text-white/40 group-hover:text-[var(--accent)]"}`} strokeWidth={isActive ? 2.5 : 2} />
                   <span className="flex-1 truncate">{item.label}</span>
                   {badgeCount > 0 && (
-                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-lg bg-rose-500 px-1.5 text-[9px] font-black text-white shadow-md">
+                    <span className={`flex h-5 min-w-[20px] items-center justify-center rounded-md px-1.5 text-[9px] font-black shadow-md ${isActive ? "bg-black text-white" : "bg-rose-500 text-white"}`}>
                       {badgeCount}
                     </span>
                   )}
-                  {!isActive && <ChevronRight className="h-3 w-3 opacity-0 group-hover:opacity-40 transition-opacity" />}
                 </>
               )}
             </NavLink>
@@ -273,16 +228,18 @@ export default function Navbar({ onClose }) {
         })}
       </nav>
 
-      {/* ── LOGOUT ── */}
-      <div className="relative z-10 p-5 border-t border-[var(--border)]">
-        <button
-          onClick={handleLogout}
-          className="flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-[13.5px] font-black uppercase tracking-widest text-[var(--muted)] transition-all hover:bg-rose-500/10 hover:text-rose-500"
-        >
-          <LogOut className="h-5 w-5" />
-          Logout
-        </button>
+      {/* ── FOOTER ACTIONS ── */}
+      <div className="relative z-10 p-4 border-t border-white/5 bg-[#14121f]/50">
+        <div className="flex items-center justify-between mb-4">
+          <button onClick={toggleTheme} className="h-9 w-9 flex items-center justify-center rounded-lg bg-white/5 text-white/60 hover:text-white hover:bg-white/10 transition-all">
+            {theme === "light" ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
+          </button>
+          <button onClick={handleLogout} className="h-9 w-9 flex items-center justify-center rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all">
+            <LogOut className="h-4.5 w-4.5" />
+          </button>
+        </div>
       </div>
     </aside>
   );
 }
+
