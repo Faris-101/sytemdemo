@@ -8,50 +8,50 @@
 
 :root {
   /* Atmosphere & Base — "Comfortable Luxury" (light) */
-  --bg: #f7f4ef;
+  --bg: #f8fafc;
   --surface: #ffffff;
-  --surface-soft: #f2ede4;
-  --surface-glass: rgba(255, 255, 255, 0.68);
+  --surface-soft: #f3f4f6;
+  --surface-glass: rgba(255, 255, 255, 0.82);
 
   /* Brand Colors (Violet Aurora) */
-  --accent: #6d5bfa;
-  --accent-soft: #efebff;
-  --accent-deep: #5240e0;
-  --accent-glow: rgba(109, 91, 250, 0.18);
+  --accent: #6366f1;
+  --accent-soft: rgba(99, 102, 241, 0.1);
+  --accent-deep: #4f46e5;
+  --accent-glow: rgba(99, 102, 241, 0.18);
 
   /* Luxury accent (warm brass / gold) */
-  --accent-2: #c8a050;
-  --accent-2-soft: rgba(200, 160, 80, 0.14);
-  --accent-2-deep: #a9803a;
+  --accent-2: #8b5cf6;
+  --accent-2-soft: rgba(139, 92, 246, 0.12);
+  --accent-2-deep: #7c3aed;
 
   /* Functional Colors */
   --success: #10b981;
   --warning: #f59e0b;
-  --danger: #f43f5e;
+  --danger: #ef4444;
   --success-soft: rgba(16, 184, 129, 0.14);
   --warning-soft: rgba(245, 158, 11, 0.14);
-  --danger-soft: rgba(244, 63, 94, 0.14);
-  --info-soft: rgba(109, 91, 250, 0.14);
-  --purple-soft: rgba(168, 85, 247, 0.16);
+  --danger-soft: rgba(239, 68, 68, 0.14);
+  --info-soft: rgba(99, 102, 241, 0.14);
+  --purple-soft: rgba(139, 92, 246, 0.14);
 
   /* Text & Contrast */
-  --navy: #1c1730;
-  --text: #2a2438;
-  --muted: #8b84a1;
-  --border: rgba(43, 36, 58, 0.09);
+  --navy: #0f172a;
+  --text: #111827;
+  --muted: #64748b;
+  --border: #e5e7eb;
 
   /* Geometry */
-  --radius-sm: 16px;
-  --radius-md: 26px;
-  --radius-lg: 42px;
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 28px;
 
   /* Depth (Layered Shadows, violet-tinted for warmth) */
-  --shadow-soft: 0 4px 24px rgba(43, 36, 58, 0.04);
+  --shadow-soft: 0 4px 24px rgba(15, 23, 42, 0.04);
   --shadow-card:
-    0 20px 45px rgba(43, 36, 58, 0.07), 0 1px 3px rgba(0, 0, 0, 0.02);
+    0 18px 50px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.03);
   --shadow-float:
-    0 35px 70px rgba(109, 91, 250, 0.16), 0 10px 24px rgba(0, 0, 0, 0.03);
-  --shadow-glow: 0 25px 60px -10px rgba(109, 91, 250, 0.35);
+    0 28px 70px rgba(99, 102, 241, 0.16), 0 10px 24px rgba(15, 23, 42, 0.05);
+  --shadow-glow: 0 24px 54px -12px rgba(99, 102, 241, 0.34);
 
   /* Spacing */
   --space: 8px;
@@ -66,9 +66,9 @@
   --g1: var(--accent);
   --g2: var(--accent-deep);
   --g3: var(--accent);
-  --gold: var(--accent-2);
-  --gold2: var(--accent-2-deep);
-  --gold3: var(--accent-2-soft);
+  --gold: var(--accent);
+  --gold2: var(--accent-deep);
+  --gold3: var(--accent-soft);
   --cream: var(--bg);
   --white: var(--surface);
   --border-color: var(--border);
@@ -78,17 +78,17 @@
   --serif: var(--font-display);
 
   /* tone aliases referenced across pages */
-  --blue: #3b82f6;
+  --blue: #2563eb;
   --green: var(--success);
   --orange: var(--warning);
   --red: var(--danger);
-  --purple: #a855f7;
+  --purple: var(--accent-2);
   --teal: #14b8a6;
 
   /* Refinement */
   --nav-bg: var(--surface-glass);
-  --nav-border: rgba(255, 255, 255, 0.4);
-  --item-hover: rgba(109, 91, 250, 0.06);
+  --nav-border: rgba(229, 231, 235, 0.8);
+  --item-hover: rgba(99, 102, 241, 0.08);
   --item-active: var(--accent-soft);
   --item-active-text: var(--accent);
 }

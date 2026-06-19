@@ -14,40 +14,32 @@ import {
   LayoutDashboard,
   LogOut,
   Monitor,
+  Moon,
   Scale,
   ShieldCheck,
+  Sun,
   Tags,
   Target,
   TrendingUp,
   UserRound,
   UsersRound,
   Wallet,
-  Sun,
-  Moon,
   X,
-  Sparkles,
-  ChevronRight
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/useAuth";
 import { useTheme } from "../context/useTheme";
-import { useView } from "../context/ViewContext";
 
 const menus = [
-  { group: "OVERVIEW" },
+  { group: "Overview" },
   { to: "/", label: "Lihat Website", icon: Globe },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
 
-  { group: "PENJUALAN" },
+  { group: "Penjualan" },
   { to: "/dashboard/leads", label: "Leads", icon: Target },
-  {
-    to: "/dashboard/reminders",
-    label: "Reminder",
-    icon: Bell,
-    badge: "reminder",
-  },
+  { to: "/dashboard/reminders", label: "Reminder", icon: Bell, badge: "reminder" },
   { to: "/dashboard/bookings", label: "Booking", icon: CalendarCheck },
   { to: "/dashboard/customers", label: "Customers", icon: UserRound },
   { to: "/dashboard/cicilan", label: "Cicilan", icon: CreditCard },
@@ -55,30 +47,25 @@ const menus = [
   { to: "/dashboard/bast", label: "Serah Terima", icon: Handshake },
   { to: "/dashboard/after-sales", label: "After Sales", icon: Headphones },
 
-  { group: "PROPERTI" },
+  { group: "Properti" },
   { to: "/dashboard/units", label: "Unit / Kavling", icon: Building2 },
   { to: "/dashboard/pricelist", label: "Pricelist & KPR", icon: Landmark },
   { to: "/dashboard/progress", label: "Progress", icon: TrendingUp },
   { to: "/dashboard/proyek", label: "Proyek & Konstruksi", icon: HardHat },
 
-  { group: "TIM & MARKETING" },
+  { group: "Tim & Marketing" },
   { to: "/dashboard/timsales", label: "Tim Sales", icon: UsersRound },
   { to: "/dashboard/promo", label: "Promo", icon: Tags },
 
-  { group: "LEGAL" },
+  { group: "Legal" },
   { to: "/dashboard/legal", label: "Legal & Dokumen", icon: Scale },
 
-  { group: "KEUANGAN" },
+  { group: "Keuangan" },
   { to: "/dashboard/keuangan", label: "Kas & Keuangan", icon: Wallet },
   { to: "/dashboard/akuntansi", label: "Keuangan Pro", icon: BookOpenCheck },
 
-  { group: "MANAJEMEN" },
-  {
-    to: "/dashboard/approvals",
-    label: "Approval",
-    icon: ShieldCheck,
-    badge: "approval",
-  },
+  { group: "Manajemen" },
+  { to: "/dashboard/approvals", label: "Approval", icon: ShieldCheck, badge: "approval" },
   { to: "/dashboard/laporan", label: "Laporan", icon: BarChart3 },
   { to: "/dashboard/portal", label: "Portal Customer", icon: Monitor },
 ];
@@ -93,46 +80,31 @@ const roleAccess = {
   "/dashboard/legal": ["admin", "direktur", "keuangan"],
 };
 
-const ROLE_COLOR = {
-  admin: "text-[var(--accent)]",
-  marketing: "text-[var(--accent)]",
-  keuangan: "text-blue-500",
-  direktur: "text-violet-500",
-  customer: "text-teal-500",
-};
-
-export default function Navbar({ onClose }) {
+export default function Navbar({ onClose, variant = "full" }) {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const { viewMode } = useView();
   const navigate = useNavigate();
   const [badges, setBadges] = useState({ reminder: 0, approval: 0 });
 
+  const isFull = variant === "full";
+  const isIcon = variant === "icon";
+  const isCompact = variant === "compact" || variant === "icon";
+
   useEffect(() => {
     let ignore = false;
-    Promise.allSettled([
-      api.get("/reminders/badge"),
-      api.get("/approvals/badge"),
-    ]).then(([r, a]) => {
+
+    Promise.allSettled([api.get("/reminders/badge"), api.get("/approvals/badge")]).then(([r, a]) => {
       if (ignore) return;
       setBadges({
         reminder: r.status === "fulfilled" ? r.value.data.jumlah : 0,
         approval: a.status === "fulfilled" ? a.value.data.jumlah : 0,
       });
     });
+
     return () => {
       ignore = true;
     };
   }, []);
-
-  const initials = user?.nama
-    ? user.nama
-        .split(" ")
-        .map((word) => word[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase()
-    : "?";
 
   const allowedMenus = menus.filter((item) => {
     if (item.group) return true;
@@ -150,46 +122,58 @@ export default function Navbar({ onClose }) {
     if (onClose) onClose();
   }
 
-  const isDesktopWorkspace = viewMode === 'desktop';
+  const initials = getInitials(user?.nama || "Administrator");
 
   return (
-    <aside className="relative flex h-screen w-full max-w-[280px] shrink-0 flex-col overflow-hidden bg-[#1c1730] text-white shadow-2xl transition-all duration-300">
-      
-      {/* ── BRANDING ── */}
-      <div className="relative z-10 flex items-center gap-4 px-6 py-8">
-        <div className="relative h-10 w-10 shrink-0 rounded-lg bg-white p-1.5 overflow-hidden">
-          <img src="/assets/logo.svg" alt="Logo" className="h-full w-full object-contain" />
+    <aside className="flex h-full w-full flex-col overflow-hidden bg-white text-slate-900">
+      <div className={`flex items-center border-b border-slate-200 ${isFull ? "justify-between px-5 py-5" : "justify-center px-3 py-4"}`}>
+        <div className={`flex min-w-0 items-center ${isFull ? "gap-3" : "justify-center"}`}>
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-indigo-600 text-sm font-black text-white shadow-lg shadow-indigo-600/20">
+            PS
+          </div>
+          {isFull && (
+            <div className="min-w-0">
+              <h1 className="truncate text-lg font-black tracking-normal text-slate-950">PropSuite</h1>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Enterprise CRM</p>
+            </div>
+          )}
         </div>
-        <div>
-          <h1 className="font-display text-xl font-black tracking-tight leading-none text-white">
-            Prop<span className="text-[var(--accent)]">Suite</span>
-          </h1>
-          <p className="mt-1 text-[8px] font-black uppercase tracking-[0.2em] text-white/40">Management System</p>
-        </div>
+
+        {isFull && onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="grid h-10 w-10 place-items-center rounded-2xl border border-slate-200 bg-white text-slate-500"
+            aria-label="Tutup menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
       </div>
 
-      {/* ── USER INFO (Simple for Sidebar) ── */}
-      <div className="relative z-10 mx-4 mb-6 px-2">
-        <div className="flex items-center gap-3 py-4 border-y border-white/5">
-          <div className="h-10 w-10 shrink-0 rounded-lg bg-[var(--accent)] flex items-center justify-center text-xs font-black text-black">
-            {initials}
-          </div>
-          <div className="min-w-0">
-            <div className="truncate text-sm font-bold text-white">{user?.nama}</div>
-            <div className="text-[9px] font-black uppercase tracking-widest text-[var(--accent)]">{user?.role}</div>
+      {isFull && (
+        <div className="px-4 py-4">
+          <div className="flex items-center gap-3 rounded-3xl border border-slate-200 bg-slate-50 px-3 py-3">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white text-xs font-black text-indigo-600 shadow-sm">
+              {initials}
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-bold text-slate-950">{user?.nama || "Administrator"}</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">{user?.role || "Admin"}</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* ── NAVIGATION ── */}
-      <nav className="app-scrollbar relative z-10 flex-1 space-y-1 overflow-y-auto px-3 pb-8">
+      <nav className={`app-scrollbar flex-1 overflow-y-auto ${isFull ? "space-y-1 px-3 pb-4" : "space-y-1 px-2 pb-4 pt-3"}`}>
         {allowedMenus.map((item, index) => {
           if (item.group) {
+            if (isCompact) {
+              return <div key={`group-${index}`} className="mx-auto my-3 h-px w-8 rounded-full bg-slate-200" />;
+            }
+
             return (
-              <div
-                key={`group-${index}`}
-                className="px-4 pb-2 pt-6 text-[9px] font-black uppercase tracking-[0.2em] text-white/30"
-              >
+              <div key={`group-${index}`} className="px-3 pb-1 pt-4 text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">
                 {item.group}
               </div>
             );
@@ -204,21 +188,37 @@ export default function Navbar({ onClose }) {
               to={item.to}
               end={item.to === "/" || item.to === "/dashboard"}
               onClick={handleNavClick}
+              title={isCompact ? item.label : undefined}
               className={({ isActive }) =>
-                `nav-item group flex items-center gap-3 px-4 py-3 text-[13px] font-medium transition-all ${
+                `group relative flex items-center transition ${
+                  isCompact
+                    ? "mx-auto h-11 w-11 justify-center rounded-2xl"
+                    : "gap-3 rounded-2xl px-3 py-3 text-sm font-semibold"
+                } ${
                   isActive
-                    ? "active bg-[var(--accent)] text-black font-bold shadow-lg"
-                    : "text-white/60 hover:bg-white/5 hover:text-white"
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-950"
                 }`
               }
             >
               {({ isActive }) => (
                 <>
-                  <Icon className={`h-4.5 w-4.5 ${isActive ? "text-black" : "text-white/40 group-hover:text-[var(--accent)]"}`} strokeWidth={isActive ? 2.5 : 2} />
-                  <span className="flex-1 truncate">{item.label}</span>
+                  <Icon className={`${isCompact ? "h-5 w-5" : "h-[18px] w-[18px]"} ${isActive ? "text-white" : "text-slate-400 group-hover:text-indigo-600"}`} />
+                  {!isCompact && <span className="min-w-0 flex-1 truncate">{item.label}</span>}
                   {badgeCount > 0 && (
-                    <span className={`flex h-5 min-w-[20px] items-center justify-center rounded-md px-1.5 text-[9px] font-black shadow-md ${isActive ? "bg-black text-white" : "bg-rose-500 text-white"}`}>
+                    <span
+                      className={`grid place-items-center rounded-full text-[9px] font-black ${
+                        isCompact
+                          ? "absolute -right-1 -top-1 h-5 min-w-5 px-1"
+                          : "h-5 min-w-5 px-1.5"
+                      } ${isActive ? "bg-white text-indigo-600" : "bg-red-500 text-white"}`}
+                    >
                       {badgeCount}
+                    </span>
+                  )}
+                  {isIcon && (
+                    <span className="pointer-events-none absolute left-[calc(100%+10px)] top-1/2 z-50 hidden -translate-y-1/2 whitespace-nowrap rounded-xl bg-slate-950 px-3 py-2 text-xs font-bold text-white shadow-xl group-hover:block">
+                      {item.label}
                     </span>
                   )}
                 </>
@@ -228,14 +228,25 @@ export default function Navbar({ onClose }) {
         })}
       </nav>
 
-      {/* ── FOOTER ACTIONS ── */}
-      <div className="relative z-10 p-4 border-t border-white/5 bg-[#14121f]/50">
-        <div className="flex items-center justify-between mb-4">
-          <button onClick={toggleTheme} className="h-9 w-9 flex items-center justify-center rounded-lg bg-white/5 text-white/60 hover:text-white hover:bg-white/10 transition-all">
-            {theme === "light" ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
+      <div className={`border-t border-slate-200 ${isFull ? "p-4" : "px-2 py-4"}`}>
+        <div className={`flex ${isFull ? "items-center justify-between gap-2" : "flex-col items-center gap-2"}`}>
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className={`${isFull ? "flex-1 px-3" : "w-11"} inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white text-sm font-bold text-slate-600 transition hover:border-indigo-200 hover:text-indigo-600`}
+            title="Ganti tema"
+          >
+            {theme === "light" ? <Moon className="h-[18px] w-[18px]" /> : <Sun className="h-[18px] w-[18px]" />}
+            {isFull && <span>{theme === "light" ? "Dark" : "Light"}</span>}
           </button>
-          <button onClick={handleLogout} className="h-9 w-9 flex items-center justify-center rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all">
-            <LogOut className="h-4.5 w-4.5" />
+          <button
+            type="button"
+            onClick={handleLogout}
+            className={`${isFull ? "flex-1 px-3" : "w-11"} inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-red-50 text-sm font-bold text-red-600 transition hover:bg-red-600 hover:text-white`}
+            title="Logout"
+          >
+            <LogOut className="h-[18px] w-[18px]" />
+            {isFull && <span>Logout</span>}
           </button>
         </div>
       </div>
@@ -243,3 +254,12 @@ export default function Navbar({ onClose }) {
   );
 }
 
+function getInitials(name) {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}

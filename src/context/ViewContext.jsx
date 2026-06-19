@@ -1,22 +1,32 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const ViewContext = createContext();
+const STORAGE_KEY = 'propsuite-view-mode';
+
+function getInitialViewMode() {
+  if (typeof window === 'undefined') return 'mobile';
+
+  const savedMode = window.localStorage.getItem(STORAGE_KEY);
+  if (['mobile', 'tablet', 'desktop'].includes(savedMode)) {
+    return savedMode;
+  }
+
+  const width = window.innerWidth;
+  if (width < 768) return 'mobile';
+  if (width < 1180) return 'tablet';
+  return 'desktop';
+}
 
 export function ViewProvider({ children }) {
-  // Default ke mobile jika layar kecil, atau desktop jika layar lebar
-  const [viewMode, setViewMode] = useState(() => {
-    const width = window.innerWidth;
-    if (width < 768) return 'mobile';
-    if (width < 1280) return 'tablet';
-    return 'desktop';
-  });
+  const [viewMode, setViewMode] = useState(getInitialViewMode);
 
-  // Sinkronisasi otomatis hanya saat inisialisasi awal atau jika user tidak memilih manual
-  // Namun user bisa meng-override kapan saja melalui switcher
+  useEffect(() => {
+    window.localStorage.setItem(STORAGE_KEY, viewMode);
+  }, [viewMode]);
 
   return (
     <ViewContext.Provider value={{ viewMode, setViewMode }}>
-      <div className={`mode-${viewMode} h-full w-full`}>
+      <div className={`mode-${viewMode} h-full w-full`} data-view-mode={viewMode}>
         {children}
       </div>
     </ViewContext.Provider>
