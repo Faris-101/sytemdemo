@@ -156,18 +156,11 @@ body {
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
-  background-image:
-    radial-gradient(at 8% 0%, var(--accent-glow) 0px, transparent 45%),
-    radial-gradient(at 95% 12%, var(--accent-2-soft) 0px, transparent 40%);
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+  background-image: none;
 }
 
 [data-theme="dark"] body {
-  background-image:
-    radial-gradient(at 12% -5%, rgba(142, 124, 255, 0.22) 0px, transparent 45%),
-    radial-gradient(at 100% 0%, rgba(240, 203, 126, 0.08) 0px, transparent 35%),
-    radial-gradient(at 50% 100%, rgba(109, 91, 250, 0.12) 0px, transparent 45%);
+  background-image: none;
 }
 
 h1,
@@ -176,7 +169,7 @@ h3,
 h4,
 .font-heading {
   font-family: var(--font-heading);
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
   font-weight: 800;
 }
 
@@ -184,7 +177,7 @@ h4,
 .font-display {
   font-family: var(--font-display);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 .font-display-italic {

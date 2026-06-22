@@ -59,22 +59,56 @@ export default function Dashboard() {
           api.get("/customers"),
           api.get("/reminders?selesai=0"),
           api.get("/approvals/badge"),
-          canReadFinance ? api.get("/keuangan/summary") : Promise.resolve({ data: null }),
-          canReadFinance ? api.get("/keuangan/chart") : Promise.resolve({ data: [] }),
+          canReadFinance
+            ? api.get("/keuangan/summary")
+            : Promise.resolve({ data: null }),
+          canReadFinance
+            ? api.get("/keuangan/chart")
+            : Promise.resolve({ data: [] }),
         ]);
 
         if (ignore) return;
 
-        const [units, leads, customers, reminders, approvals, keuangan, chart] = results;
+        const [units, leads, customers, reminders, approvals, keuangan, chart] =
+          results;
 
         setData({
-          units: units.status === "fulfilled" ? (Array.isArray(units.value.data) ? units.value.data : []) : [],
-          leads: leads.status === "fulfilled" ? (Array.isArray(leads.value.data) ? leads.value.data : []) : [],
-          customers: customers.status === "fulfilled" ? (Array.isArray(customers.value.data) ? customers.value.data : []) : [],
-          reminders: reminders.status === "fulfilled" ? (Array.isArray(reminders.value.data) ? reminders.value.data : []) : [],
-          approvals: approvals.status === "fulfilled" ? approvals.value.data?.jumlah || 0 : 0,
-          keuangan: keuangan.status === "fulfilled" ? keuangan.value.data : null,
-          chart: chart.status === "fulfilled" ? (Array.isArray(chart.value.data) ? chart.value.data : []) : [],
+          units:
+            units.status === "fulfilled"
+              ? Array.isArray(units.value.data)
+                ? units.value.data
+                : []
+              : [],
+          leads:
+            leads.status === "fulfilled"
+              ? Array.isArray(leads.value.data)
+                ? leads.value.data
+                : []
+              : [],
+          customers:
+            customers.status === "fulfilled"
+              ? Array.isArray(customers.value.data)
+                ? customers.value.data
+                : []
+              : [],
+          reminders:
+            reminders.status === "fulfilled"
+              ? Array.isArray(reminders.value.data)
+                ? reminders.value.data
+                : []
+              : [],
+          approvals:
+            approvals.status === "fulfilled"
+              ? approvals.value.data?.jumlah || 0
+              : 0,
+          keuangan:
+            keuangan.status === "fulfilled" ? keuangan.value.data : null,
+          chart:
+            chart.status === "fulfilled"
+              ? Array.isArray(chart.value.data)
+                ? chart.value.data
+                : []
+              : [],
         });
       } catch (err) {
         console.error("Dashboard fetch error:", err);
@@ -105,99 +139,191 @@ export default function Dashboard() {
   }
 
   const statsGridClass = isMobile
-    ? "grid-cols-1"
+    ? "grid-cols-2"
     : isTablet
       ? "grid-cols-2"
-      : "grid-cols-2 lg:grid-cols-5";
+      : "grid-cols-5";
 
   return (
     <div
       className={`animate-in fade-in slide-in-from-bottom-4 ${
-        isMobile ? "space-y-5 pb-24" : isTablet ? "space-y-6 pb-20" : "space-y-6 pb-20"
+        isMobile
+          ? "space-y-5 pb-24"
+          : isTablet
+            ? "space-y-4 pb-16"
+            : "space-y-6 pb-20"
       }`}
     >
-      <header className={`grid gap-5 ${isDesktop ? "lg:grid-cols-[minmax(0,1fr)_440px] lg:items-end" : ""}`}>
-        <div className="min-w-0">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white px-3 py-1.5 text-[11px] font-bold text-indigo-600 shadow-sm">
-            <Activity className="h-3.5 w-3.5" />
-            Operational command center
+      <header
+        className={`${isMobile ? "space-y-2" : isTablet ? "space-y-2" : "space-y-3"}`}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <h1
+              className={`whitespace-nowrap overflow-hidden text-ellipsis font-bold text-slate-900 ${
+                isMobile ? "text-sm" : isTablet ? "text-base" : "text-3xl"
+              }`}
+            >
+              Hai Administrator
+            </h1>
+
+            {!isMobile && (
+              <p
+                className={`whitespace-nowrap overflow-hidden text-ellipsis text-slate-500 ${
+                  isTablet ? "text-xs" : "text-sm"
+                }`}
+              >
+                Pantau performa properti, leads, dan kas perusahaan
+              </p>
+            )}
           </div>
-          <h1
-            className={`max-w-3xl font-black leading-[1.03] tracking-normal text-slate-950 ${
-              isMobile ? "text-[2.15rem]" : isTablet ? "text-4xl" : "text-5xl"
-            }`}
-          >
-            Selamat datang,
-            <br />
-            <span className="text-indigo-600">{user?.nama || "Administrator"}</span>
-          </h1>
-          <p className={`mt-3 max-w-2xl font-medium leading-relaxed text-slate-500 ${isMobile ? "text-sm" : "text-base"}`}>
-            Pantau performa properti, manajemen leads, dan siklus kas perusahaan dalam satu kendali terpadu.
-          </p>
+
+          {isDesktop && (
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-medium text-slate-500">
+                {formatTanggalLengkap(new Date())}
+              </span>
+
+              <button
+                type="button"
+                className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-indigo-200 hover:text-indigo-600"
+                aria-label="Notifikasi dashboard"
+              >
+                <Bell className="h-4 w-4" />
+                <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500" />
+              </button>
+            </div>
+          )}
         </div>
 
-        <div className={`grid gap-3 ${isMobile ? "grid-cols-1" : "grid-cols-[minmax(0,1fr)_auto_auto]"}`}>
-          <label className="relative block min-w-0">
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <input
-              type="search"
-              placeholder="Cari data operasional..."
-              className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 pl-11 text-sm font-semibold text-slate-700 shadow-sm outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
-            />
-          </label>
+        <label className="relative block">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
 
-          <button
-            type="button"
-            className="inline-flex h-12 items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 text-xs font-black uppercase tracking-[0.12em] text-indigo-600 shadow-sm transition hover:border-indigo-200"
-          >
-            <Calendar className="h-4 w-4" />
-            <span>{formatTanggalLengkap(new Date())}</span>
-          </button>
-
-          <button
-            type="button"
-            className="relative inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 text-slate-500 shadow-sm transition hover:border-indigo-200 hover:text-indigo-600"
-            aria-label="Notifikasi dashboard"
-          >
-            <Bell className="h-5 w-5" />
-            <span className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full border-2 border-white bg-red-500" />
-          </button>
-        </div>
+          <input
+            type="search"
+            placeholder="Cari data operasional..."
+            className="h-11 w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+          />
+        </label>
       </header>
 
       <section className={`grid gap-3 ${statsGridClass}`}>
-        <MetricCard icon={<Home />} label="Total Unit" value={stats.totalUnit} helper={`${stats.unitThisMonth} unit baru`} tone="emerald" isCompact={isDesktop} />
-        <MetricCard icon={<Key />} label="Tersewa" value={stats.totalBooking} helper={`${formatPercent(stats.bookingRate)} dari total`} tone="blue" isCompact={isDesktop} />
-        <MetricCard icon={<BadgeCheck />} label="Tersedia" value={stats.unitTersedia} helper="Unit siap disewa" tone="violet" isCompact={isDesktop} />
-        <MetricCard icon={<UserPlus />} label="Leads Aktif" value={stats.activeLead} helper={`${stats.newLeadsThisMonth} leads baru`} tone="amber" isCompact={isDesktop} />
-        <MetricCard icon={<Users />} label="Kunjungan" value={stats.totalCustomer} helper={`${stats.newCustomersThisMonth} kunjungan hari ini`} tone="teal" isCompact={isDesktop} />
+        <MetricCard
+          icon={<Home />}
+          label="Total Unit"
+          value={stats.totalUnit}
+          helper={`${stats.unitThisMonth} unit baru`}
+          tone="emerald"
+          isCompact={isDesktop}
+          wide={isTablet}
+        />
+        <MetricCard
+          icon={<Key />}
+          label="Tersewa"
+          value={stats.totalBooking}
+          helper={`${formatPercent(stats.bookingRate)} dari total`}
+          tone="blue"
+          isCompact={isDesktop}
+        />
+        <MetricCard
+          icon={<BadgeCheck />}
+          label="Tersedia"
+          value={stats.unitTersedia}
+          helper="Unit siap disewa"
+          tone="violet"
+          isCompact={isDesktop}
+        />
+        <MetricCard
+          icon={<UserPlus />}
+          label="Leads Aktif"
+          value={stats.activeLead}
+          helper={`${stats.newLeadsThisMonth} leads baru`}
+          tone="amber"
+          isCompact={isDesktop}
+        />
+        <MetricCard
+          icon={<Users />}
+          label="Kunjungan"
+          value={stats.totalCustomer}
+          helper={`${stats.newCustomersThisMonth} kunjungan hari ini`}
+          tone="teal"
+          isCompact={isDesktop}
+        />
       </section>
 
-      <div className={`grid gap-5 ${isDesktop ? "xl:grid-cols-[minmax(0,1fr)_340px]" : "grid-cols-1"}`}>
+      <div
+        className={`grid gap-5 ${isDesktop ? "grid-cols-[minmax(0,1fr)_340px]" : "grid-cols-1"}`}
+      >
         <div className="space-y-5">
-          <div className={`grid gap-5 ${isMobile ? "grid-cols-1" : "lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.75fr)]"}`}>
-            <Panel title="Analytics Hub" subtitle="Growth & performance trends" action={<GhostButton label="Perencanaan" />}>
-              <ChartPanel chartData={data.chart} leads={data.leads} canReadFinance={canReadFinance} isCompact={isDesktop} />
+          <div
+            className={`grid gap-5 ${isMobile ? "grid-cols-1" : "grid-cols-[minmax(0,1.45fr)_minmax(280px,0.75fr)]"}`}
+          >
+            <Panel
+              title="Analytics Hub"
+              subtitle="Growth & performance trends"
+              action={<GhostButton label="Perencanaan" />}
+            >
+              <ChartPanel
+                chartData={data.chart}
+                leads={data.leads}
+                canReadFinance={canReadFinance}
+                isCompact={isDesktop}
+              />
             </Panel>
 
             <Panel title="Inventory Health" subtitle="Unit status distribution">
-              <UnitPieChart distribution={stats.unitDistribution} total={stats.totalUnit} isCompact={isDesktop} />
+              <UnitPieChart
+                distribution={stats.unitDistribution}
+                total={stats.totalUnit}
+                isCompact={isDesktop}
+              />
             </Panel>
           </div>
 
-          <div className={`grid gap-3 ${isMobile ? "grid-cols-2" : "grid-cols-2 lg:grid-cols-4"}`}>
-            <SummaryCard label="Revenue" value={formatRupiahCompact(stats.totalSales)} change="+18%" tone="blue" />
-            <SummaryCard label="Profit" value={formatRupiahCompact(stats.grossProfit)} change="+12%" tone="emerald" />
-            <SummaryCard label="Booking" value={stats.totalBooking} change="+9%" tone="violet" />
-            <SummaryCard label="Conv." value={formatPercent(stats.conversionRate)} change="+6%" tone="amber" />
+          <div
+            className={`grid gap-3 ${isMobile ? "grid-cols-2" : isTablet ? "grid-cols-2" : "grid-cols-4"}`}
+          >
+            <SummaryCard
+              label="Revenue"
+              value={formatRupiahCompact(stats.totalSales)}
+              change="+18%"
+              tone="blue"
+            />
+            <SummaryCard
+              label="Profit"
+              value={formatRupiahCompact(stats.grossProfit)}
+              change="+12%"
+              tone="emerald"
+            />
+            <SummaryCard
+              label="Booking"
+              value={stats.totalBooking}
+              change="+9%"
+              tone="violet"
+            />
+            <SummaryCard
+              label="Conv."
+              value={formatPercent(stats.conversionRate)}
+              change="+6%"
+              tone="amber"
+            />
           </div>
 
-          <Panel title="Recent Activities" subtitle={`${stats.totalLead} active prospects`} action={<GhostButton label="Lihat semua" />}>
-            <LeadsTable leads={stats.latestLeads} isCompact={isDesktop || isMobile} />
+          <Panel
+            title="Recent Activities"
+            subtitle={`${stats.totalLead} active prospects`}
+            action={<GhostButton label="Lihat semua" />}
+          >
+            <LeadsTable
+              leads={stats.latestLeads}
+              isCompact={isDesktop || isMobile}
+            />
           </Panel>
         </div>
 
-        <aside className={`grid gap-5 ${isDesktop ? "content-start" : "md:grid-cols-2"}`}>
+        <aside
+          className={`grid gap-5 ${isDesktop ? "content-start" : isTablet ? "grid-cols-2" : ""}`}
+        >
           <Panel title="To Do List" action={<GhostButton label="Tambah" />}>
             <ScheduleList reminders={stats.reminders} isCompact={isDesktop} />
           </Panel>
@@ -215,7 +341,11 @@ export default function Dashboard() {
   );
 }
 
-function MetricCard({ icon, label, value, helper, tone, isCompact }) {
+function MetricCard({ icon, label, value, helper, tone, isCompact, wide }) {
+  const { viewMode } = useView();
+  const isMobile = viewMode === "mobile";
+  const isTablet = viewMode === "tablet";
+
   const tones = {
     emerald: "bg-emerald-50 text-emerald-600 ring-emerald-100",
     blue: "bg-blue-50 text-blue-600 ring-blue-100",
@@ -224,26 +354,80 @@ function MetricCard({ icon, label, value, helper, tone, isCompact }) {
     teal: "bg-teal-50 text-teal-600 ring-teal-100",
   };
 
-  return (
-    <article className={`group rounded-[22px] border border-slate-200 bg-white shadow-[0_16px_45px_rgba(15,23,42,0.06)] transition hover:-translate-y-0.5 hover:border-indigo-100 ${isCompact ? "p-4" : "p-5"}`}>
-      <div className="flex items-start justify-between gap-3">
-        <div className={`grid shrink-0 place-items-center rounded-full ring-1 ${tones[tone]} ${isCompact ? "h-10 w-10" : "h-12 w-12"}`}>
-          {cloneElement(icon, { size: isCompact ? 18 : 21, strokeWidth: 2.2 })}
+  if (wide) {
+    return (
+      <article className="col-span-2 flex items-center gap-4 rounded-[18px] border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_44px_rgba(15,23,42,0.09)]">
+        <div
+          className={`grid h-11 w-11 shrink-0 place-items-center rounded-full ring-1 ${tones[tone]}`}
+        >
+          {cloneElement(icon, { size: 19, strokeWidth: 2.2 })}
         </div>
-        <span className="grid h-8 w-8 place-items-center rounded-full bg-slate-50 text-slate-300 transition group-hover:bg-indigo-50 group-hover:text-indigo-600">
-          <ChevronRight className="h-4 w-4" />
-        </span>
+        <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">
+              {label}
+            </p>
+            <p className="mt-1 text-2xl font-black tracking-normal text-slate-950">
+              {value}
+            </p>
+          </div>
+          {helper && (
+            <p className="max-w-[140px] text-right text-xs text-slate-500">
+              {helper}
+            </p>
+          )}
+        </div>
+      </article>
+    );
+  }
+
+  return (
+    <article
+      className={`group rounded-[18px] border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_44px_rgba(15,23,42,0.09)] ${
+        isMobile ? "p-2.5" : isTablet ? "p-3" : "p-3"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div
+          className={`grid shrink-0 place-items-center rounded-full ring-1 ${tones[tone]} ${
+            isMobile ? "h-6 w-6" : isTablet ? "h-7 w-7" : "h-8 w-8"
+          }`}
+        >
+          {cloneElement(icon, {
+            size: isMobile ? 13 : isTablet ? 14 : 16,
+            strokeWidth: 2.2,
+          })}
+        </div>
+        <div />
       </div>
-      <div className={isCompact ? "mt-4" : "mt-5"}>
-        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">{label}</p>
-        <p className={`mt-1 font-black tracking-normal text-slate-950 ${isCompact ? "text-2xl" : "text-3xl"}`}>{value}</p>
-        <p className="mt-2 text-xs font-semibold text-slate-500">{helper}</p>
+      <div className={isMobile ? "mt-2" : isCompact ? "mt-4" : "mt-5"}>
+        <p
+          className={`font-black uppercase tracking-[0.18em] text-slate-400 ${
+            isMobile ? "text-[8px]" : isTablet ? "text-[9px]" : "text-[10px]"
+          }`}
+        >
+          {label}
+        </p>
+        <p
+          className={`mt-1 font-black tracking-normal text-slate-950 ${
+            isMobile ? "text-base" : isTablet ? "text-lg" : "text-xl"
+          }`}
+        >
+          {value}
+        </p>
+        {isCompact && !isMobile && (
+          <p className="mt-1 text-[10px] text-slate-500">{helper}</p>
+        )}
       </div>
     </article>
   );
 }
 
 function SummaryCard({ label, value, change, tone }) {
+  const { viewMode } = useView();
+  const isMobile = viewMode === "mobile";
+  const isTablet = viewMode === "tablet";
+
   const tones = {
     emerald: "bg-emerald-50 text-emerald-600",
     blue: "bg-blue-50 text-blue-600",
@@ -252,27 +436,77 @@ function SummaryCard({ label, value, change, tone }) {
   };
 
   return (
-    <article className="rounded-[20px] border border-slate-200 bg-white p-4 shadow-[0_12px_34px_rgba(15,23,42,0.05)]">
+    <article
+      className={`rounded-[18px] border border-slate-200 bg-white shadow-[0_12px_34px_rgba(15,23,42,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_44px_rgba(15,23,42,0.09)] ${
+        isMobile ? "p-3" : isTablet ? "p-3.5" : "p-4"
+      }`}
+    >
       <div className="flex items-center justify-between gap-2">
-        <p className="truncate text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">{label}</p>
-        <span className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[10px] font-black ${tones[tone]}`}>
-          <TrendingUp className="h-3 w-3" />
+        <p
+          className={`truncate font-black uppercase tracking-[0.16em] text-slate-400 ${
+            isMobile ? "text-[8px]" : "text-[9px]"
+          }`}
+        >
+          {label}
+        </p>
+        <span
+          className={`inline-flex shrink-0 items-center gap-1 rounded-full font-black ${tones[tone]} ${
+            isMobile ? "px-1.5 py-0.5 text-[9px]" : "px-2 py-1 text-[10px]"
+          }`}
+        >
+          <TrendingUp className={isMobile ? "h-2.5 w-2.5" : "h-3 w-3"} />
           {change}
         </span>
       </div>
-      <h4 className="mt-4 truncate text-xl font-black tracking-normal text-slate-950">{value}</h4>
-      <p className="mt-1 text-[11px] font-semibold text-slate-400">Vs last month</p>
+      <h4
+        className={`truncate font-black tracking-normal text-slate-950 ${
+          isMobile
+            ? "mt-2 text-base"
+            : isTablet
+              ? "mt-3 text-lg"
+              : "mt-4 text-xl"
+        }`}
+      >
+        {value}
+      </h4>
+      {!isMobile && (
+        <p className="mt-1 text-[11px] font-semibold text-slate-400">
+          Vs last month
+        </p>
+      )}
     </article>
   );
 }
 
 function Panel({ title, subtitle, action, children }) {
+  const { viewMode } = useView();
+  const isMobile = viewMode === "mobile";
+  const isTablet = viewMode === "tablet";
+
   return (
-    <section className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_55px_rgba(15,23,42,0.06)]">
-      <div className="mb-5 flex items-start justify-between gap-4">
+    <section
+      className={`rounded-[22px] border border-slate-200 bg-white shadow-[0_18px_55px_rgba(15,23,42,0.06)] transition-shadow duration-200 hover:shadow-[0_22px_65px_rgba(15,23,42,0.09)] ${
+        isMobile ? "p-3" : isTablet ? "p-4" : "p-5"
+      }`}
+    >
+      <div
+        className={`flex items-start justify-between gap-4 ${
+          isMobile ? "mb-3" : isTablet ? "mb-4" : "mb-5"
+        }`}
+      >
         <div className="min-w-0">
-          <h2 className="text-sm font-black uppercase tracking-normal text-slate-950">{title}</h2>
-          {subtitle && <p className="mt-1 text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">{subtitle}</p>}
+          <h2
+            className={`font-black uppercase tracking-normal text-slate-950 whitespace-nowrap overflow-hidden text-ellipsis ${
+              isMobile ? "text-xs" : isTablet ? "text-xs" : "text-sm"
+            }`}
+          >
+            {title}
+          </h2>
+          {subtitle && (
+            <p className="mt-1 truncate text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">
+              {subtitle}
+            </p>
+          )}
         </div>
         {action}
       </div>
@@ -285,7 +519,9 @@ function LeadsTable({ leads, isCompact }) {
   if (!leads.length) {
     return (
       <div className="grid min-h-[170px] place-items-center rounded-2xl border border-dashed border-slate-200 bg-slate-50">
-        <p className="text-xs font-bold text-slate-400">Belum ada leads terbaru.</p>
+        <p className="text-xs font-bold text-slate-400">
+          Belum ada leads terbaru.
+        </p>
       </div>
     );
   }
@@ -295,20 +531,35 @@ function LeadsTable({ leads, isCompact }) {
       <table className="w-full border-separate border-spacing-0">
         <thead>
           <tr className="bg-slate-50">
-            <th className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">Name</th>
-            {!isCompact && <th className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">Status</th>}
-            <th className="px-4 py-3 text-right text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">Budget</th>
+            <th className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">
+              Name
+            </th>
+            {!isCompact && (
+              <th className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">
+                Status
+              </th>
+            )}
+            <th className="px-4 py-3 text-right text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">
+              Budget
+            </th>
           </tr>
         </thead>
         <tbody>
           {leads.map((lead) => (
-            <tr key={lead.id} className="group">
+            <tr
+              key={lead.id}
+              className="group transition-colors hover:bg-slate-50/80"
+            >
               <td className="border-t border-slate-200 px-4 py-3">
                 <div className="flex min-w-0 items-center gap-3">
                   <Avatar name={lead.nama} />
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-bold text-slate-900 group-hover:text-indigo-600">{lead.nama}</p>
-                    {isCompact && <StatusBadge status={lead.status || "Baru"} />}
+                    <p className="truncate text-sm font-bold text-slate-900 group-hover:text-indigo-600">
+                      {lead.nama}
+                    </p>
+                    {isCompact && (
+                      <StatusBadge status={lead.status || "Baru"} />
+                    )}
                   </div>
                 </div>
               </td>
@@ -334,7 +585,9 @@ function ScheduleList({ reminders, isCompact }) {
       <div className="grid min-h-[170px] place-items-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 text-center">
         <div>
           <CheckCircle2 className="mx-auto h-9 w-9 text-emerald-500" />
-          <p className="mt-3 text-xs font-bold text-slate-500">Tidak ada agenda tertunda.</p>
+          <p className="mt-3 text-xs font-bold text-slate-500">
+            Tidak ada agenda tertunda.
+          </p>
         </div>
       </div>
     );
@@ -343,15 +596,22 @@ function ScheduleList({ reminders, isCompact }) {
   return (
     <div className={isCompact ? "space-y-2.5" : "space-y-3"}>
       {reminders.map((reminder) => (
-        <div key={reminder.id} className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/70 p-3">
+        <div
+          key={reminder.id}
+          className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/70 p-3 transition-colors hover:border-indigo-200 hover:bg-white"
+        >
           <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white text-indigo-600 shadow-sm">
             <Clock className="h-[18px] w-[18px]" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-bold text-slate-950">{reminder.lead_nama || "Follow-up"}</p>
-            <p className="truncate text-xs font-medium text-slate-500">{reminder.catatan || "Agenda operasional"}</p>
+            <p className="truncate text-sm font-bold text-slate-950">
+              {reminder.lead_nama || "Follow-up"}
+            </p>
+            <p className="truncate text-xs font-medium text-slate-500">
+              {reminder.catatan || "Agenda operasional"}
+            </p>
           </div>
-          <ChevronRight className="h-4 w-4 shrink-0 text-slate-300" />
+          <ChevronRight className="h-4 w-4 shrink-0 text-slate-300 transition-transform group-hover:translate-x-0.5 group-hover:text-indigo-500" />
         </div>
       ))}
     </div>
@@ -362,16 +622,25 @@ function ActivityList({ activities, isCompact }) {
   return (
     <div className={isCompact ? "space-y-3" : "space-y-4"}>
       {activities.slice(0, 5).map((activity, index) => (
-        <div key={`${activity.label}-${index}`} className="flex gap-3">
+        <div
+          key={`${activity.label}-${index}`}
+          className="group flex gap-3 rounded-xl p-1.5 transition-colors hover:bg-slate-50"
+        >
           <div className="relative flex flex-col items-center">
-            <div className={`grid rounded-2xl ${index === 0 ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-500"} ${isCompact ? "h-8 w-8" : "h-9 w-9"} place-items-center`}>
+            <div
+              className={`grid rounded-2xl ${index === 0 ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-500"} ${isCompact ? "h-8 w-8" : "h-9 w-9"} place-items-center`}
+            >
               <Activity className="h-4 w-4" />
             </div>
             {index !== 4 && <div className="mt-2 w-px flex-1 bg-slate-200" />}
           </div>
           <div className="min-w-0 flex-1 pb-2">
-            <p className="text-sm font-bold leading-snug text-slate-950">{activity.label}</p>
-            <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">{activity.meta}</p>
+            <p className="text-sm font-bold leading-snug text-slate-950">
+              {activity.label}
+            </p>
+            <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+              {activity.meta}
+            </p>
           </div>
         </div>
       ))}
@@ -383,25 +652,29 @@ function BestProperty({ unit, isCompact }) {
   if (!unit) {
     return (
       <div className="grid min-h-[170px] place-items-center rounded-2xl border border-dashed border-slate-200 bg-slate-50">
-        <p className="text-xs font-bold text-slate-400">Belum ada data properti.</p>
+        <p className="text-xs font-bold text-slate-400">
+          Belum ada data properti.
+        </p>
       </div>
     );
   }
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-      <div className={isCompact ? "h-32" : "h-40"}>
+    <article className="group overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 transition-shadow duration-200 hover:shadow-[0_18px_44px_rgba(15,23,42,0.09)]">
+      <div className={`overflow-hidden ${isCompact ? "h-32" : "h-40"}`}>
         <img
           src="/bahan acak/zac-gudakov-UPbYh3A5cdg-unsplash.jpg"
           alt="Top asset"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
         />
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="truncate text-lg font-black tracking-normal text-slate-950">{unit.kode}</h3>
+            <h3 className="truncate text-lg font-black tracking-normal text-slate-950">
+              {unit.kode}
+            </h3>
             <p className="mt-1 flex items-center gap-1.5 text-xs font-bold text-slate-500">
               <MapPin className="h-3.5 w-3.5 text-red-500" />
               Blok {unit.blok}
@@ -422,7 +695,10 @@ function BestProperty({ unit, isCompact }) {
           </div>
         </div>
 
-        <button type="button" className="inline-flex h-10 w-full items-center justify-center rounded-2xl bg-slate-950 text-xs font-black uppercase tracking-[0.14em] text-white transition hover:bg-indigo-600">
+        <button
+          type="button"
+          className="inline-flex h-10 w-full items-center justify-center rounded-2xl bg-slate-950 text-xs font-black uppercase tracking-[0.14em] text-white transition hover:bg-indigo-600"
+        >
           Details
         </button>
       </div>
@@ -446,13 +722,23 @@ function StatusBadge({ status }) {
     closing: "bg-emerald-50 text-emerald-600",
     dead: "bg-red-50 text-red-600",
   };
-  const toneClass = tones[status.toLowerCase()] || "bg-slate-100 text-slate-600";
-  return <span className={`inline-flex rounded-full px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] ${toneClass}`}>{status}</span>;
+  const toneClass =
+    tones[status.toLowerCase()] || "bg-slate-100 text-slate-600";
+  return (
+    <span
+      className={`inline-flex rounded-full px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] ${toneClass}`}
+    >
+      {status}
+    </span>
+  );
 }
 
 function GhostButton({ label }) {
   return (
-    <button type="button" className="inline-flex h-9 shrink-0 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 text-[11px] font-black text-indigo-600 shadow-sm transition hover:border-indigo-200 hover:bg-indigo-50">
+    <button
+      type="button"
+      className="inline-flex h-9 shrink-0 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 text-[11px] font-black text-indigo-600 shadow-sm transition hover:border-indigo-200 hover:bg-indigo-50"
+    >
       {label}
       <ArrowUpRight className="h-3.5 w-3.5" />
     </button>
@@ -479,7 +765,10 @@ function buildDashboardStats(data) {
     unitTersedia: tersedia.length || 12,
     unitTerjual: terjual.length || 24,
     totalLead: leads.length || 156,
-    activeLead: leads.filter((lead) => !["closing", "dead"].includes(lead.status?.toLowerCase())).length || 89,
+    activeLead:
+      leads.filter(
+        (lead) => !["closing", "dead"].includes(lead.status?.toLowerCase()),
+      ).length || 89,
     totalCustomer: customers.length || 64,
     unitThisMonth: 5,
     soldThisMonth: 3,
@@ -495,11 +784,21 @@ function buildDashboardStats(data) {
       { label: "Tersewa", value: terjual.length || 24, color: "#10B981" },
       { label: "Tersedia", value: tersedia.length || 12, color: "#6366F1" },
       { label: "Booking", value: booking.length || 6, color: "#F59E0B" },
-      { label: "Maintenance", value: Math.max(totalUnit - (terjual.length + tersedia.length + booking.length), 0) || 3, color: "#8B5CF6" },
+      {
+        label: "Maintenance",
+        value:
+          Math.max(
+            totalUnit - (terjual.length + tersedia.length + booking.length),
+            0,
+          ) || 3,
+        color: "#8B5CF6",
+      },
     ],
     reminders: reminders.slice(0, 4),
     latestLeads: leads.slice(0, 5),
-    bestProperty: [...units].sort((a, b) => parseNumber(b.harga) - parseNumber(a.harga))[0] || {
+    bestProperty: [...units].sort(
+      (a, b) => parseNumber(b.harga) - parseNumber(a.harga),
+    )[0] || {
       kode: "Villa Sinar",
       blok: "A-01",
       tipe: "Premium",
@@ -531,12 +830,20 @@ function formatRupiahCompact(v) {
   if (!n) return "Rp 0";
   if (n >= 1e9) return `Rp ${(n / 1e9).toFixed(1)} M`;
   if (n >= 1e6) return `Rp ${(n / 1e6).toFixed(0)} jt`;
-  return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(n);
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(n);
 }
 
 function formatTanggalLengkap(t) {
   try {
-    return new Intl.DateTimeFormat("id-ID", { day: "2-digit", month: "short", year: "numeric" }).format(t);
+    return new Intl.DateTimeFormat("id-ID", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(t);
   } catch {
     return "-";
   }
