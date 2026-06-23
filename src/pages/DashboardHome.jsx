@@ -139,9 +139,9 @@ export default function Dashboard() {
   }
 
   const statsGridClass = isMobile
-    ? "grid-cols-2"
+    ? "grid-cols-2 [&>*:last-child]:col-span-2"
     : isTablet
-      ? "grid-cols-2"
+      ? "grid-cols-2 [&>*:last-child]:col-span-2"
       : "grid-cols-5";
 
   return (
@@ -215,7 +215,6 @@ export default function Dashboard() {
           helper={`${stats.unitThisMonth} unit baru`}
           tone="emerald"
           isCompact={isDesktop}
-          wide={isTablet}
         />
         <MetricCard
           icon={<Key />}
@@ -252,11 +251,21 @@ export default function Dashboard() {
       </section>
 
       <div
-        className={`grid gap-5 ${isDesktop ? "grid-cols-[minmax(0,1fr)_340px]" : "grid-cols-1"}`}
+        className={`grid gap-5 ${
+          isDesktop
+            ? "grid-cols-[minmax(0,1fr)_340px]"
+            : isTablet
+              ? "grid-cols-[minmax(0,1fr)_260px]"
+              : "grid-cols-1"
+        }`}
       >
         <div className="space-y-5">
           <div
-            className={`grid gap-5 ${isMobile ? "grid-cols-1" : "grid-cols-[minmax(0,1.45fr)_minmax(280px,0.75fr)]"}`}
+            className={`grid gap-5 ${
+              isDesktop
+                ? "grid-cols-[minmax(0,1.45fr)_minmax(280px,0.75fr)]"
+                : "grid-cols-1"
+            }`}
           >
             <Panel
               title="Analytics Hub"
@@ -314,27 +323,27 @@ export default function Dashboard() {
             subtitle={`${stats.totalLead} active prospects`}
             action={<GhostButton label="Lihat semua" />}
           >
-            <LeadsTable
-              leads={stats.latestLeads}
-              isCompact={isDesktop || isMobile}
-            />
+            <LeadsTable leads={stats.latestLeads} isCompact={!isDesktop} />
           </Panel>
         </div>
 
-        <aside
-          className={`grid gap-5 ${isDesktop ? "content-start" : isTablet ? "grid-cols-2" : ""}`}
-        >
+        <aside className="grid gap-5 content-start">
           <Panel title="To Do List" action={<GhostButton label="Tambah" />}>
-            <ScheduleList reminders={stats.reminders} isCompact={isDesktop} />
+            <ScheduleList reminders={stats.reminders} isCompact={!isDesktop} />
           </Panel>
 
           <Panel title="Live Activity" subtitle="Operational pulse">
-            <ActivityList activities={stats.activities} isCompact={isDesktop} />
+            <ActivityList
+              activities={stats.activities}
+              isCompact={!isDesktop}
+            />
           </Panel>
 
-          <Panel title="Top Asset" subtitle="Highest value">
-            <BestProperty unit={stats.bestProperty} isCompact={isDesktop} />
-          </Panel>
+          {isDesktop && (
+            <Panel title="Top Asset" subtitle="Highest value">
+              <BestProperty unit={stats.bestProperty} isCompact={isDesktop} />
+            </Panel>
+          )}
         </aside>
       </div>
     </div>

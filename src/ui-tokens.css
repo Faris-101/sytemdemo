@@ -162,7 +162,6 @@ input,
 select,
 textarea {
   font-family: var(--font-heading);
-  min-height: 44px;
   border-radius: 12px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
